@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Style/Slider.uss?fileID=7433441132597879392&amp;guid=515e652630215414c95072254bfeeb3a&amp;type=3#Slider" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement name="Container" style="flex-grow: 1; position: relative; left: auto; overflow: visible; flex-wrap: nowrap; flex-direction: column; justify-content: flex-start; align-items: stretch; width: 200px; height: auto; margin-top: 0; margin-right: 0; -unity-background-scale-mode: stretch-to-fill; display: flex; visibility: visible;">
+            <ui:Slider picking-mode="Ignore" label="Slider" value="0" high-value="20" name="Music_Slider" low-value="-80" direction="Horizontal" class="Music_Slider" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
