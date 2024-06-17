@@ -16,9 +16,8 @@ public class Player : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
 
-
     [SerializeField]
-    PlayerData playerData;
+    private PlayerData playerData;
 
     [SerializeField]
     private Transform groundCheck;
@@ -39,7 +38,6 @@ public class Player : MonoBehaviour
     public Vector2 CurrentVelocity { get; private set; }
 
     private Vector2 workspace;
-
     public int FacingDirection { get; private set; }
 
     private void Awake()
@@ -153,8 +151,12 @@ public class Player : MonoBehaviour
 
     private void Flip()
     {
+        /*FacingDirection *= -1;
+        transform.Rotate(0.0f, 180.0f, 0.0f);*/
         FacingDirection *= -1;
-        transform.Rotate(0.0f, 180.0f, 0.0f);
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1f;
+        transform.localScale = localScale;
     }
     private void DuskMoveEffect()
     {
