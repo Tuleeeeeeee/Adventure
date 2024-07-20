@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+       
         StateManager = new StateManager();
 
         IdleState = new PlayerIdleState(this, StateManager, playerData, "idle");
@@ -136,7 +136,7 @@ public class Player : MonoBehaviour
     }
     public void JumpAudio()
     {
-        audioManager.PlaySFX(audioManager.Jump);
+       
     }
     public void CanCreateDuskJump()
     {

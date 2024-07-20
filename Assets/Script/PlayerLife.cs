@@ -22,7 +22,7 @@ public class PlayerLife : MonoBehaviour
         if(collision.gameObject.CompareTag("Trap"))
         {
             Die();
-            audioManager.PlaySFX(audioManager.Hit);
+         
             boxCollider2d.enabled = false;
             Debug.Log("dead");
         }

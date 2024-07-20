@@ -1,84 +1,32 @@
-using System.Collections;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Audio;
-
 public class AudioManager : MonoBehaviour
 {
-    [Header("Audio Source")]
+    public static AudioManager instance;
 
-    [SerializeField]
-    private AudioSource musicSource;
-    [SerializeField]
-    private AudioSource SFXSource;
+    private AudioSource audioPlayer;
 
-    [Header("Audio Clip")]
-    [SerializeField]
-    private AudioClip[] Background;
-    public AudioClip Jump;
-    public AudioClip Hit;
-
-
-    [SerializeField]
-    private AudioMixer audioMixer;
-
-    public bool VolumeOn { get; private set; }
-    public float VolumeValue { get; private set; }
-
-    private int currentClipIndex = 0;
-    void Awake()
+    private void Awake()
     {
-        // audioMixer = GetComponent<AudioMixer>();
-      
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("Audio");
 
-        if (objs.Length > 1)
-        {
-            Destroy(this.gameObject);
-        }
+        audioPlayer = GetComponent<AudioSource>();
 
-        DontDestroyOnLoad(this.gameObject);
+        if (instance != null)
+            Destroy(gameObject);
+        else
+            instance = this;
+
+        DontDestroyOnLoad(gameObject);
     }
-    private void Start()
-    {
-        StartCoroutine(PlaySongSequence());
-     
-        if(VolumeOn)
-        {
 
-        }
-        SetVolume(VolumeValue);
-    }
-    private void Update()
+    public void PlaySound(AudioClip soundToPlay)
     {
-        PlayerPrefs.SetInt("VolumeOn", VolumeOn ? 1 : 0);
-        PlayerPrefs.SetFloat("SoundVolume", VolumeValue);
-    }
-    IEnumerator PlaySongSequence()
-    {
-        // Play the current song
-        musicSource.clip = Background[currentClipIndex];
-        Debug.Log(musicSource.clip.name);
-        musicSource.Play();
-        yield return new WaitForSeconds(Background[currentClipIndex].length);
-        currentClipIndex++;
-        if (currentClipIndex >= Background.Length)
-        {
-            currentClipIndex = 0; // Loop back to the beginning
-        }
-        StartCoroutine(PlaySongSequence());
-    }
-    public void PlaySFX(AudioClip clip)
-    {
-        SFXSource.PlayOneShot(clip);
-    }
-    public float SetVolume(float volumeValue)
-    {
-        VolumeValue = volumeValue;
-        return VolumeValue;
-    }
-    public void MuteVolume()
-    {
-        AudioListener.volume = 0;
+        // example 1
+        audioPlayer.clip = soundToPlay;
+        audioPlayer.Play();
+
+        // example 2dasd
+
+        audioPlayer.PlayOneShot(soundToPlay);
     }
 }
+
