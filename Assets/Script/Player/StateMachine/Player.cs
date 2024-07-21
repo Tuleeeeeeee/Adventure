@@ -24,15 +24,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform wallCheck;
 
-    public AudioManager audioManager { get; private set; }
     [SerializeField]
     private ParticleSystem dustMoveEffect;
     [SerializeField]
     private ParticleSystem dustJumpEffect;
     [SerializeField]
     private ParticleSystem dustWallJumpEffect;
+    [SerializeField]
+    private AudioSource jumpAudio;
     public Animator Animator { get; private set; }
-
     public PlayerInputHandler InputHandler { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public Vector2 CurrentVelocity { get; private set; }
@@ -63,8 +63,6 @@ public class Player : MonoBehaviour
         FacingDirection = 1;
         Animator.SetTrigger("appear");
         StateManager.Initialize(IdleState);
-      
-
     }
     private void Update()
     {
@@ -136,7 +134,7 @@ public class Player : MonoBehaviour
     }
     public void JumpAudio()
     {
-       
+        AudioManager.instance.PlaySound(jumpAudio.clip);
     }
     public void CanCreateDuskJump()
     {

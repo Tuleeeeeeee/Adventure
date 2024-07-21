@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class WaypointFollower : MonoBehaviour
 {
-    [SerializeField] private float speed = 2f;
-    
-    [SerializeField] private GameObject[] waypoints;
+    [SerializeField]
+    private float speed = 2f;
+
+    [SerializeField]
+    private GameObject[] waypoints;
+
+    [SerializeField]
+    private GameObject chainPoint;
+
+    [SerializeField]
+    private float Delta;
+
+ 
+
     private int currentWaypointIndex = 0;
 
     private bool isMovingForward;
 
-
+    private void Start()
+    {
+        if (chainPoint != null)
+        {
+            CreateChain();
+        }
+    }
     void Update()
     {
         if (Vector2.Distance(waypoints[currentWaypointIndex].transform.position, transform.position) < .1f)
@@ -37,7 +54,28 @@ public class WaypointFollower : MonoBehaviour
 
 
         }
-        transform.position = Vector2.MoveTowards(transform.position, waypoints[currentWaypointIndex].transform.position, Time.deltaTime * speed);
+        transform.position = Vector2.MoveTowards(transform.position, waypoints[currentWaypointIndex].transform.position,
+            Time.deltaTime * speed);
+     
+    }
+    private void CreateChain()
+    {
+        for (int i = 0; i < waypoints.Length; i++)
+        {
+            if (waypoints.Length > i + 1)
+            {
+                Vector2 startPos = new Vector2(waypoints[i].transform.position.x, waypoints[i].transform.position.y);
+                Vector2 endPos = new Vector2(waypoints[i + 1].transform.position.x, waypoints[i + 1].transform.position.y);
+                Vector2 point = startPos;
+                Vector2 direction = (endPos - startPos).normalized;
+
+                while ((endPos - startPos).magnitude > (point - startPos).magnitude)
+                {
+                    Instantiate(chainPoint, point, Quaternion.identity, transform.parent);
+                    point += (direction * Delta);
+                }
+            }
+        }
     }
     private void OnDrawGizmos()
     {

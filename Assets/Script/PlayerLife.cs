@@ -15,7 +15,7 @@ public class PlayerLife : MonoBehaviour
         anim = GetComponent<Animator>();
         Rb = GetComponent<Rigidbody2D>();
         boxCollider2d = GetComponent<BoxCollider2D>();
-        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

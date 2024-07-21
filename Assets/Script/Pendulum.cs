@@ -1,28 +1,43 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Pendulum : MonoBehaviour
 {
-    [SerializeField] private Transform pivotPoint; // The pivot point (empty GameObject) for the pendulum
-    [SerializeField] private float maxHeight = 2.0f; // Maximum height of the pendulum swing
-    [SerializeField] private float speedOfAngleIncrease = 30.0f; // Speed of angle increase (adjust as needed)
+    private float angle = Mathf.PI / 4;
+    [SerializeField]
+    private Transform origin;
+    [SerializeField]
+    private float length = 3f;
 
-    private float angle = 0.0f;
+    [SerializeField]
+    private float angleV = 0;
+    [SerializeField]
+    private float angleA = 0;
+
+
+    private Vector2 bob;
+
 
     private void Update()
     {
-        // Update the angle based on time and speed
-        angle += speedOfAngleIncrease * Time.deltaTime;
+        angle += angleV;
+        // angleV += angleA;
 
-        // Ensure the angle stays within a reasonable range (e.g., -65 to 65 degrees)
-        if (angle > 65 || angle < -65)
-            speedOfAngleIncrease *= -1;
+        bob.x = length * Mathf.Sin(angle) + origin.position.x;
+        bob.y = length * Mathf.Cos(angle) + origin.position.y;
 
-        // Calculate the end position of the pendulum
-        Vector3 endPos = pivotPoint.position + (Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.down * maxHeight);
+        transform.rotation = origin.rotation * Quaternion.Euler(0, 0, angle);
+    }
+    private void OnDrawGizmos()
+    {
 
-        // Smoothly move the object to the end position
-        transform.position = Vector3.Lerp(transform.position, endPos, Time.deltaTime);
     }
 }
+
+
+
