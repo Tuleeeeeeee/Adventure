@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMoveState : PlayerGroundState
 {
+    private bool isOnPlatform;
     public PlayerMoveState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
     {
     }
@@ -25,7 +26,7 @@ public class PlayerMoveState : PlayerGroundState
 
     public override void Enter()
     {
-        
+
         base.Enter();
     }
 
@@ -38,15 +39,13 @@ public class PlayerMoveState : PlayerGroundState
     {
         base.LogicUpdate();
 
+       // isOnPlatform = player.CheckIfOnPlatform();
+
         player.CanCreateDusk(xInput);
 
         player.CheckIfShouldFlip(xInput);
-
         player.SetVelocityX(playerData.movementVelocity * xInput);
-
-       
-
-
+        
         if (xInput == 0 && !isExitingState)
         {
             stateManager.ChangeState(player.IdleState);
@@ -57,5 +56,5 @@ public class PlayerMoveState : PlayerGroundState
     {
         base.PhysicUpdate();
     }
-    
+
 }

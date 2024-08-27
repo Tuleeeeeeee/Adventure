@@ -21,9 +21,11 @@ MonoBehaviour:
   wallCheckDistance: 0.4
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 192
+  whatIsPlatfrom:
+    serializedVersion: 2
+    m_Bits: 128
   wallSlideVelocity: 5
   wallJumpVelocity: 25
   wallJumpTime: 0.2
   wallJumpAngle: {x: 1, y: 2}
-  dustParticle: {fileID: 1640491210396313400, guid: 84866cac7b958d2498ae7f5922ffad22, type: 3}

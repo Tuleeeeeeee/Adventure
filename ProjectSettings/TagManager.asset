@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Trap
   - Audio
+  - Platform
   - One Way Platform
   layers:
   - Default
@@ -15,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
+  - Platform
   - 
   - 
   - 

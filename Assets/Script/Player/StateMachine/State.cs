@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class State 
@@ -9,7 +6,7 @@ public class State
     protected StateManager stateManager;
     protected PlayerData playerData;
 
-    protected bool isAnimtionFinished;
+    protected bool isAnimationFinished;
     protected bool isExitingState;
 
     protected float startTime;
@@ -29,7 +26,7 @@ public class State
         startTime = Time.time;
         player.Animator.SetBool(animBoolName, true);
         Debug.Log(animBoolName);
-        isAnimtionFinished = false;
+        isAnimationFinished = false;
         isExitingState = false;
     }
     public virtual void Exit()
@@ -54,7 +51,7 @@ public class State
 
     }
     
-    public virtual void AnimationFinishedTrigger() => isAnimtionFinished = true;
+    public virtual void AnimationFinishedTrigger() => isAnimationFinished = true;
     
 }
 

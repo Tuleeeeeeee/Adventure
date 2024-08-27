@@ -22,6 +22,7 @@ public class PlayerData : ScriptableObject
     public float groundCheckRadius = 0.3f;
     public float wallCheckDistance = 0.5f;
     public LayerMask whatIsGround;
+    public LayerMask whatIsPlatfrom;
 
     [Header("Wall slide state")]
     public float wallSlideVelocity = 3f;

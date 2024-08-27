@@ -6,7 +6,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public StateManager StateManager { get; private set; }
-
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
@@ -36,15 +35,21 @@ public class Player : MonoBehaviour
     public PlayerInputHandler InputHandler { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public Vector2 CurrentVelocity { get; private set; }
-
     private Vector2 workspace;
     public int FacingDirection { get; private set; }
 
+    [SerializeField]
+    private float rayDistance = 2f;
+
+
+    private bool isOnPlatform;
+    private Rigidbody2D platformRBody;
+    private Vector2 lastPlatformPosition;
+
+
     private void Awake()
     {
-       
         StateManager = new StateManager();
-
         IdleState = new PlayerIdleState(this, StateManager, playerData, "idle");
         MoveState = new PlayerMoveState(this, StateManager, playerData, "move");
         JumpState = new PlayerJumpState(this, StateManager, playerData, "in_air");
@@ -54,30 +59,47 @@ public class Player : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, StateManager, playerData, "wall_slide");
         WallJumpState = new PlayerWallJumpState(this, StateManager, playerData, "wall_jump");
 
+
     }
     private void Start()
     {
+
         RB = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
         FacingDirection = 1;
         Animator.SetTrigger("appear");
         StateManager.Initialize(IdleState);
+
     }
     private void Update()
     {
         CurrentVelocity = RB.velocity;
         CheckIfGrounded();
+      
         StateManager.CurrentState.LogicUpdate();
-        Debug.DrawRay(wallCheck.position, Vector2.right * FacingDirection, Color.green);
-
+        Debug.DrawRay(wallCheck.position, Vector2.right * FacingDirection, Color.red);
+        Debug.DrawRay(transform.position, Vector2.down * rayDistance, Color.red);
+        CheckIfOnPlatform();
     }
     private void FixedUpdate()
     {
         StateManager.CurrentState.PhysicUpdate();
+        
+
+        if (isOnPlatform)
+        {
+            Vector2 deltaPosition = platformRBody.position - lastPlatformPosition;
+
+            Debug.Log("Platform current position: " + platformRBody.position);
+            Debug.Log("Delta Position: " + deltaPosition);
+
+            RB.position += deltaPosition;
+            lastPlatformPosition = platformRBody.position;
+
+            Debug.Log("Updated lastPlatformPosition: " + lastPlatformPosition);
+        }
     }
-
-
     public void SetVelocity(float velocity, Vector2 angle, int direction)
     {
         angle.Normalize();
@@ -98,10 +120,7 @@ public class Player : MonoBehaviour
         CurrentVelocity = workspace;
     }
     private void AnimationTrigger() => StateManager.CurrentState.AnimationTrigger();
-
     private void AnimationFinishTrigger() => StateManager.CurrentState.AnimationFinishedTrigger();
-
-
     public bool CheckIfTouchingWall()
     {
         return Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
@@ -114,11 +133,35 @@ public class Player : MonoBehaviour
     {
         return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround);
     }
+    public void CheckIfOnPlatform()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, rayDistance, playerData.whatIsPlatfrom);
+        // If it hits something...
+        if (hit.collider != null)
+        {
+            platformRBody = hit.collider.GetComponent<Rigidbody2D>();
+            if (platformRBody != null)
+            {
+                if (!isOnPlatform)
+                {
+                    lastPlatformPosition = platformRBody.position;
+                }
+               // Debug.Log("lastPlatformPosition" + lastPlatformPosition);
+            }
+            isOnPlatform = true;
+        }
+        else
+        {
+            isOnPlatform = false;
+            platformRBody = null;
+        }
+
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawSphere(groundCheck.position, playerData.groundCheckRadius);
-
     }
     public void CheckIfShouldFlip(int xInput)
     {
@@ -129,12 +172,13 @@ public class Player : MonoBehaviour
     }
     public void CanCreateDusk(int xInput)
     {
-            DuskMoveEffect();
-          //  Debug.Log("dust");
+        DuskMoveEffect();
+        //  Debug.Log("dust");
     }
     public void JumpAudio()
     {
-        AudioManager.instance.PlaySound(jumpAudio.clip);
+        
+       // AudioManager.Instance.PlaySound(jumpAudio.clip);
     }
     public void CanCreateDuskJump()
     {
@@ -146,7 +190,6 @@ public class Player : MonoBehaviour
         DuskWallJumpEffect();
         //Debug.Log("dust_jump");
     }
-
     private void Flip()
     {
         /*FacingDirection *= -1;
@@ -168,5 +211,12 @@ public class Player : MonoBehaviour
     {
         dustWallJumpEffect.Play();
     }
-
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        ICollectible collectible = col.GetComponent<ICollectible>();
+        if (collectible != null)
+        {
+            collectible.OnCollected();
+        }
+    }
 }

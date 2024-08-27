@@ -1,166 +1,224 @@
-using DG.Tweening;
 using UnityEngine;
+// Different types of movements for the platform
+public enum MovementType
+{
+    line,
+    circular,
+    zigzag
+};
+
+// Movement orientation for line movement type
+public enum LineMovementOrientation
+{
+    horizontal,
+    vertical
+}
+
+// Movement orientation for circular movement type
+public enum CircularMovementOrientation
+{
+    clockwise,
+    counterclockwise
+}
 
 public class MovingPlatform : MonoBehaviour
 {
+
+    // General vars (affect all types of movemens)
+
+    [SerializeField]
+    MovementType movementType;
     [SerializeField]
     private float speed = 2f;
-    [SerializeField]
-    private GameObject[] waypoints;
-    [SerializeField]
-    Transform left, right, top, bottom;
-    [SerializeField]
-    private LayerMask whatIsGround;
-    
+    Vector3 startPosition;
+    private Color gizmoColor = Color.yellow;
 
-    private int currentWaypointIndex = 0;
-    private bool isMovingForward = true;
-    private bool isTouchingRight, isTouchingLeft, isTouchingTop, isTouchingBottom;
-
+    // Line movement vars
     [SerializeField]
-    private float radius;
+    private LineMovementOrientation lineMovementOrientation;
+    [SerializeField]
+    private float lineDistance = 5f;
 
-    private Tween moveTween;
-    private Animator animator;
+    // Circle movement vars
+    [SerializeField]
+    private CircularMovementOrientation circularMovementOrientation;
+    [SerializeField]
+    private float circleRadius = 5f;
 
+    // Zigzag movement vars
+    [SerializeField]
+    private int zigzagLines = 4;
+    [SerializeField]
+    private float zigzagLineDistance = 2;
+    private float zigzagStep;
+    private bool zigzagMovingPositive = true;
+    private Player player;
+    private Rigidbody2D rb;
+    private Vector3 direction;
+    // Start is called before the first frame update
+    private void Awake()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        rb = GetComponent<Rigidbody2D>();
+    }
     void Start()
     {
-        animator = GetComponent<Animator>();
-        MoveToNextWaypoint();
-    }
-    private void Update()
-    {
-        DetermineDirection();
+        // Set start position
+        startPosition = this.transform.position;
+        zigzagStep = 0f;
     }
 
-    private void MoveToNextWaypoint()
+    // Update is called once per frame
+    private void FixedUpdate()
     {
-        // Calculate the duration based on the distance and speed
-        float duration = (Vector2.Distance(transform.position, waypoints[currentWaypointIndex].transform.position) / speed);
-
-        moveTween = transform.DOMove(waypoints[currentWaypointIndex].transform.position, duration).SetEase(Ease.InQuart).OnComplete(() =>
+        // Manage how the platform have to move according to movementType var
+        switch (movementType)
         {
-            // Change direction at the end/beginning
-            if (currentWaypointIndex == 0 && !isMovingForward)
-            {
-                isMovingForward = true;
-            }
-            else if (currentWaypointIndex == waypoints.Length - 1 && isMovingForward)
-            {
-                isMovingForward = false;
-            }
+            case MovementType.line:
+                moveInAStraightLine();
+                break;
+            case MovementType.circular:
+                MoveInCircles();
+                break;
+            case MovementType.zigzag:
+                MoveInZigzag();
+                break;
+        }
+    }
 
-            // Update index based on direction
-            currentWaypointIndex += (isMovingForward ? 1 : -1);
+    // Move the platform in a straight line in movementOrientation
+    public void moveInAStraightLine()
+    {
+        // Get current coordenates 
+        float x = startPosition.x;
+        float y = startPosition.y;
+        float z = startPosition.z;
 
-            // Loop back to the beginning if needed
-            /*if (currentWaypointIndex < 0)
-            {
-                currentWaypointIndex = 1; // Set to 1 because we're reversing direction
-                isMovingForward = true;
-            }*/
-            MoveToNextWaypoint();
-        });
+        // Calculating next position according to the orientation selected
+        switch (lineMovementOrientation)
+        {
+            case LineMovementOrientation.horizontal:
+                x = startPosition.x + Mathf.Sin(Time.time * speed) * lineDistance;
+                break;
+            case LineMovementOrientation.vertical:
+                y = startPosition.y + Mathf.Sin(Time.time * speed) * lineDistance;
+                break;
+        }
+
+        // Moving platform
+        this.transform.position = new Vector3(x, y, z);
+    }
+
+    public void MoveInCircles()
+    {
+        // Calculating direction (CW or CCW)
+        int direction = (circularMovementOrientation == CircularMovementOrientation.counterclockwise) ? 1 : -1;
+
+        // Calculating coordenates 
+        float x = startPosition.x + Mathf.Cos(Time.time * speed * direction) * circleRadius;
+        x -= circleRadius;
+        float y = startPosition.y + Mathf.Sin(Time.time * speed * direction) * circleRadius;
+        float z = transform.position.z;
+
+        // Moving Platform
+        this.transform.position = new Vector3(x, y, z);
 
     }
-    void DetermineDirection()
-    {
-        Vector2 direction = waypoints[currentWaypointIndex].transform.position - transform.position;
 
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+
+    public void MoveInZigzag()
+    {
+        // Changing direction when the platform reach the limits 
+        if (transform.position.x >= startPosition.x + zigzagLineDistance * zigzagLines)
         {
-            // Moving horizontally
-            if (direction.x > 0)
-            {
-                isTouchingRight = checkIfTouchingRight();
-                if (isTouchingRight)
-                {
-                    // animator.Play("Right_Hit_Anim");
-                    animator.SetTrigger("Right");
-                    isTouchingRight = false;
-                }
-            }
-            else
-            {
-                isTouchingLeft = checkIfTouchingLeft();
-                if (isTouchingLeft)
-                {
-                    // animator.Play("Left_Hit_Anim");
-                    animator.SetTrigger("Left");
-                    isTouchingLeft = false;
-                }
-            }
+            zigzagMovingPositive = false;
+        }
+        else if (transform.position.x <= startPosition.x)
+        {
+            zigzagMovingPositive = true;
+        }
+
+        // Calculating coordenates
+        float factor = (Mathf.Acos(Mathf.Cos(zigzagStep * (float)Mathf.PI)) / (float)Mathf.PI);
+        float x = startPosition.x + zigzagStep * zigzagLineDistance;
+        float y = startPosition.y + factor * zigzagLineDistance;
+
+        if (zigzagMovingPositive)
+        {
+            zigzagStep += speed / 50;
         }
         else
         {
-            // Moving vertically
-            if (direction.y > 0)
-            {
-                isTouchingTop = checkIfTouchingTop();
-                if (isTouchingTop)
-                {
-                    animator.SetTrigger("Top");
-                    isTouchingTop = false;
-                    //animator.Play("Top_Hit_Anim");
-                }
-            }
-            else
-            {
-                isTouchingBottom = checkIfTouchingBottom();
-                if (isTouchingBottom)
-                {
-                    animator.SetTrigger("Down");
-                    isTouchingBottom = false;
-                    //animator.Play("Bottom_Hit_Anim");
-                }
-            }
+            zigzagStep -= speed / 50;
         }
-    }
-    private bool checkIfTouchingRight()
-    {
-        return Physics2D.OverlapCircle(right.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingLeft()
-    {
-        return Physics2D.OverlapCircle(left.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingTop()
-    {
-        return Physics2D.OverlapCircle(top.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingBottom()
-    {
-        return Physics2D.OverlapCircle(bottom.position, radius, whatIsGround);
+
+        // keep platform within the limits
+        zigzagStep = Mathf.Clamp(zigzagStep, 0, zigzagLines);
+
+
+        // Moving platform 
+        this.transform.position = new Vector3(x, y);
     }
 
-    /*void OnCollisionEnter2D(Collision2D collision)
+    // Funtion to see the platform path (only for debugging)
+    private void OnDrawGizmosSelected()
     {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Debug.Log("Mlem");
-            DetermineDirection();
-            moveTween.Kill(); // Stop the current movement
+        Gizmos.color = gizmoColor;
+        Vector3 src = Vector3.zero;
+        Vector3 dest = Vector3.zero;
 
-            DOVirtual.DelayedCall(.5f, () =>
-            {
-                MoveToNextWaypoint(); // Continue moving in the new direction after delay
-            });
-        }
-    }*//*
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("Wall"))
+        switch (movementType)
         {
-            Debug.Log("Mlem");
+            case MovementType.line:
+                src = new Vector3(startPosition.x - lineDistance, startPosition.y);
+                dest = new Vector3(startPosition.x + lineDistance, startPosition.y);
+                Gizmos.DrawLine(src, dest);
+                src = new Vector3(startPosition.x, startPosition.y - lineDistance);
+                dest = new Vector3(startPosition.x, startPosition.y + lineDistance);
+                Gizmos.DrawLine(src, dest);
+                break;
+            case MovementType.circular:
+                // Cicular movement 
+                src = new Vector3(startPosition.x - circleRadius, startPosition.y);
+                Gizmos.DrawWireSphere(src, circleRadius);
+                break;
+            case MovementType.zigzag:
+                float x = startPosition.x;
+                float y = startPosition.y;
+
+                for (int i = 0; i < zigzagLines; i++)
+                {
+
+                    // Current position
+                    src = new Vector3(x, y);
+
+                    // Calculating next position
+                    x += zigzagLineDistance;
+
+                    // If "i" is even draw line going up, else, draw line going down
+                    // the zigzag movement always start going up
+                    y = (i % 2 == 0) ? startPosition.y + zigzagLineDistance : startPosition.y;
+
+                    dest = new Vector3(x, y);
+
+                    // Drawing line
+                    Gizmos.DrawLine(src, dest);
+
+                }
+                break;
         }
-    }*/
-    private void OnDrawGizmos()
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Gizmos.color = Color.black;
-        Gizmos.DrawSphere(left.position, radius);
-        Gizmos.DrawSphere(right.position, radius);
-        Gizmos.DrawSphere(top.position, radius);
-        Gizmos.DrawSphere(bottom.position, radius);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+
+        }
     }
 }
-
