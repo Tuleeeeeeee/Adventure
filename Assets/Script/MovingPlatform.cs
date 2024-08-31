@@ -58,7 +58,6 @@ public class MovingPlatform : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         rb = GetComponent<Rigidbody2D>();
     }
     void Start()
@@ -206,19 +205,6 @@ public class MovingPlatform : MonoBehaviour
 
                 }
                 break;
-        }
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-
         }
     }
 }

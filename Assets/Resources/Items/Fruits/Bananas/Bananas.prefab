@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8678421982089467058}
   - component: {fileID: 6720531277974597475}
-  - component: {fileID: 2480806734617485231}
+  - component: {fileID: 5888756681286413078}
   - component: {fileID: 3494961772523327667}
   m_Layer: 0
   m_Name: Bananas
@@ -72,9 +72,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -301452083
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: -749553879, guid: b494122e248b722499f8d661f7c86fad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -86,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2480806734617485231
+--- !u!95 &5888756681286413078
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -119,6 +119,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03889d7546349ea43a61dbc8b0d2060e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IncrementValue: 1
-  controller: {fileID: 9100000, guid: d9f89216485433e49992607f5b042739, type: 2}
+  incrementValue: 1
   ItemType: 0

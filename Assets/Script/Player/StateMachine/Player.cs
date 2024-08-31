@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -46,6 +43,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D platformRBody;
     private Vector2 lastPlatformPosition;
 
+    public Vector2 mlem;
+
 
     private void Awake()
     {
@@ -76,16 +75,15 @@ public class Player : MonoBehaviour
     {
         CurrentVelocity = RB.velocity;
         CheckIfGrounded();
-      
-        StateManager.CurrentState.LogicUpdate();
-        Debug.DrawRay(wallCheck.position, Vector2.right * FacingDirection, Color.red);
-        Debug.DrawRay(transform.position, Vector2.down * rayDistance, Color.red);
+
+        StateManager.CurrentPlayerState.LogicUpdate();
+
         CheckIfOnPlatform();
     }
     private void FixedUpdate()
     {
-        StateManager.CurrentState.PhysicUpdate();
-        
+        StateManager.CurrentPlayerState.PhysicUpdate();
+
 
         if (isOnPlatform)
         {
@@ -119,8 +117,8 @@ public class Player : MonoBehaviour
         RB.velocity = workspace;
         CurrentVelocity = workspace;
     }
-    private void AnimationTrigger() => StateManager.CurrentState.AnimationTrigger();
-    private void AnimationFinishTrigger() => StateManager.CurrentState.AnimationFinishedTrigger();
+    private void AnimationTrigger() => StateManager.CurrentPlayerState.AnimationTrigger();
+    private void AnimationFinishTrigger() => StateManager.CurrentPlayerState.AnimationFinishedTrigger();
     public bool CheckIfTouchingWall()
     {
         return Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDirection, playerData.wallCheckDistance, playerData.whatIsGround);
@@ -131,7 +129,9 @@ public class Player : MonoBehaviour
     }
     public bool CheckIfGrounded()
     {
-        return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround);
+        return Physics2D.OverlapBox(groundCheck.position, playerData.groundCheckSize, 0f, playerData.whatIsGround);
+        //return Physics2D.OverlapCircle(groundCheck.position, playerData.groundCheckRadius, playerData.whatIsGround)
+
     }
     public void CheckIfOnPlatform()
     {
@@ -146,7 +146,7 @@ public class Player : MonoBehaviour
                 {
                     lastPlatformPosition = platformRBody.position;
                 }
-               // Debug.Log("lastPlatformPosition" + lastPlatformPosition);
+                // Debug.Log("lastPlatformPosition" + lastPlatformPosition);
             }
             isOnPlatform = true;
         }
@@ -160,8 +160,16 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(groundCheck.position, playerData.groundCheckRadius);
+        Gizmos.color = CheckIfGrounded() ? Color.green : Color.red;
+        Gizmos.DrawCube(groundCheck.position, playerData.groundCheckSize);
+        //  Gizmos.DrawSphere(groundCheck.position, playerData.groundCheckRadius);
+
+        Gizmos.color = (CheckIfTouchingWall() || CheckIfTouchingWallBack()) ? Color.green : Color.red;
+        Gizmos.DrawLine(wallCheck.position, wallCheck.position + (Vector3)(Vector2.right * FacingDirection));
+
+        Gizmos.color = isOnPlatform ? Color.green : Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(Vector2.down * rayDistance));
+
     }
     public void CheckIfShouldFlip(int xInput)
     {
@@ -177,8 +185,8 @@ public class Player : MonoBehaviour
     }
     public void JumpAudio()
     {
-        
-       // AudioManager.Instance.PlaySound(jumpAudio.clip);
+
+        AudioManager.Instance.PlaySound(jumpAudio.clip);
     }
     public void CanCreateDuskJump()
     {

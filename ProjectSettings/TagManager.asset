@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Trap
   - Audio
+  - DoDamage
   - Platform
-  - One Way Platform
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -17,8 +17,8 @@ TagManager:
   - UI
   - Ground
   - Platform
-  - 
-  - 
+  - Enemy
+  - Object
   - 
   - 
   - 
@@ -45,9 +45,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 1674499593
-    locked: 0
   - name: Ground
     uniqueID: 3993515213
+    locked: 0
+  - name: Enemy
+    uniqueID: 379233987
+    locked: 0
+  - name: Player
+    uniqueID: 1674499593
     locked: 0

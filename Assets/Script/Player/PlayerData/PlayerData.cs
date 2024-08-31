@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="Player Data", menuName ="Data/Player Data/base Data")]
+[CreateAssetMenu(fileName = "Player Data", menuName = "Data/Player Data/base Data")]
 public class PlayerData : ScriptableObject
 {
 
@@ -19,7 +17,7 @@ public class PlayerData : ScriptableObject
     public float variableJumpHeightMultiplier = 0.5f;
 
     [Header("Check variables")]
-    public float groundCheckRadius = 0.3f;
+    public Vector2 groundCheckSize = new Vector2(1, 1);
     public float wallCheckDistance = 0.5f;
     public LayerMask whatIsGround;
     public LayerMask whatIsPlatfrom;
@@ -32,5 +30,5 @@ public class PlayerData : ScriptableObject
     public float wallJumpTime = 0.4f;
     public Vector2 wallJumpAngle = new Vector2(1, 2);
 
-  
+
 }

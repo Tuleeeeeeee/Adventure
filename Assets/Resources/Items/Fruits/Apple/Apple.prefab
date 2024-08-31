@@ -165,6 +165,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03889d7546349ea43a61dbc8b0d2060e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IncrementValue: 1
-  controller: {fileID: 9100000, guid: d9f89216485433e49992607f5b042739, type: 2}
+  incrementValue: 1
   ItemType: 0

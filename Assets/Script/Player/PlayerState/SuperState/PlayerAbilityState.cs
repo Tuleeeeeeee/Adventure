@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAbilityState : State
+public class PlayerAbilityState : PlayerState
 {
     protected bool isAbilityDone;
     protected bool isGrounded;

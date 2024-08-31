@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInAirState : State
+public class PlayerInAirState : PlayerState
 {
     private bool isGrounded;
     private bool isTouchingWall;

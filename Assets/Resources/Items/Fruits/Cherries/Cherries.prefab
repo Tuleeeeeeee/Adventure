@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7170707246443441099}
   - component: {fileID: 4378867465378433117}
   - component: {fileID: 603276664244567261}
+  - component: {fileID: 7104135327603819083}
   m_Layer: 0
   m_Name: Cherries
   m_TagString: Untagged
@@ -71,9 +72,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -301452083
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 2118261661, guid: 8cd859d867ef60a42a72ab21655b8f77, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -106,3 +107,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7104135327603819083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265840457831184057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03889d7546349ea43a61dbc8b0d2060e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  incrementValue: 1
+  ItemType: 0

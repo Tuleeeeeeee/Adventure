@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerGroundState : State
+public class PlayerGroundState : PlayerState
 {
     protected int xInput;
     private bool jumpInput;
