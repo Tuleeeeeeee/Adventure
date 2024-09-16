@@ -6,9 +6,9 @@ public class E3_MoveState : E_MoveState
         this.enemy = enemy;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
     }
 
     public override void Enter()
@@ -24,9 +24,10 @@ public class E3_MoveState : E_MoveState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
         if (isPlayerInMinAgroRange)
         {
-           // stateManager.ChangeEnemyState(enemy.PlayerDetectedState);
+            stateManager.ChangeEnemyState(enemy.PlayerDetectedState);
         }
         else if (isDetectingWall || !isDetectingLedge)
         {
@@ -35,8 +36,8 @@ public class E3_MoveState : E_MoveState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

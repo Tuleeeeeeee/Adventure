@@ -1,13 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerGroundState : PlayerState
 {
+    protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
     protected int xInput;
     private bool jumpInput;
     private bool isGrounded;
-    
+
     public PlayerGroundState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
     {
     }
@@ -25,7 +27,7 @@ public class PlayerGroundState : PlayerState
     public override void DoCheck()
     {
         base.DoCheck();
-        isGrounded = player.CheckIfGrounded();
+        isGrounded = CollisionSenses.Ground;
     }
 
     public override void Enter()
@@ -49,7 +51,7 @@ public class PlayerGroundState : PlayerState
 
         if (jumpInput && player.JumpState.CanJump())
         {
-           
+
             stateManager.ChangeState(player.JumpState);
         }
         else if (!isGrounded)

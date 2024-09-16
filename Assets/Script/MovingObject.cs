@@ -11,11 +11,11 @@ public class MovingObject : MonoBehaviour
     Transform left, right, top, bottom;
     [SerializeField]
     private LayerMask whatIsGround;
-    
+
 
     private int currentWaypointIndex = 0;
-    private bool isMovingForward = true;
-    private bool isTouchingRight, isTouchingLeft, isTouchingTop, isTouchingBottom;
+    //private bool isMovingForward = true;
+
 
     [SerializeField]
     private float radius;
@@ -41,17 +41,17 @@ public class MovingObject : MonoBehaviour
         moveTween = transform.DOMove(waypoints[currentWaypointIndex].transform.position, duration).SetEase(Ease.InQuart).OnComplete(() =>
         {
             // Change direction at the end/beginning
-            if (currentWaypointIndex == 0 && !isMovingForward)
-            {
-                isMovingForward = true;
-            }
-            else if (currentWaypointIndex == waypoints.Length - 1 && isMovingForward)
-            {
-                isMovingForward = false;
-            }
+            /* if (currentWaypointIndex == 0 && !isMovingForward)
+             {
+                 isMovingForward = true;
+             }
+             else if (currentWaypointIndex == waypoints.Length - 1 && isMovingForward)
+             {
+                 isMovingForward = false;
+             }
 
-            // Update index based on direction
-            currentWaypointIndex += (isMovingForward ? 1 : -1);
+             // Update index based on direction
+             currentWaypointIndex += (isMovingForward ? 1 : -1);*/
 
             // Loop back to the beginning if needed
             /*if (currentWaypointIndex < 0)
@@ -59,6 +59,15 @@ public class MovingObject : MonoBehaviour
                 currentWaypointIndex = 1; // Set to 1 because we're reversing direction
                 isMovingForward = true;
             }*/
+
+            currentWaypointIndex++;
+
+            // If we reached the last waypoint, loop back to the first one
+            if (currentWaypointIndex >= waypoints.Length)
+            {
+                currentWaypointIndex = 0; // Loop back to the first waypoint
+            }
+
             MoveToNextWaypoint();
         });
 
@@ -69,91 +78,30 @@ public class MovingObject : MonoBehaviour
 
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
-            // Moving horizontally
-            if (direction.x > 0)
-            {
-                isTouchingRight = checkIfTouchingRight();
-                if (isTouchingRight)
-                {
-                    // animator.Play("Right_Hit_Anim");
-                    animator.SetTrigger("Right");
-                    isTouchingRight = false;
-                }
-            }
-            else
-            {
-                isTouchingLeft = checkIfTouchingLeft();
-                if (isTouchingLeft)
-                {
-                    // animator.Play("Left_Hit_Anim");
-                    animator.SetTrigger("Left");
-                    isTouchingLeft = false;
-                }
-            }
+            // Handle horizontal movement
+            if (direction.x > 0 && IsTouching(right))
+                HandleCollision("Right");
+            else if (direction.x < 0 && IsTouching(left))
+                HandleCollision("Left");
         }
         else
         {
-            // Moving vertically
-            if (direction.y > 0)
-            {
-                isTouchingTop = checkIfTouchingTop();
-                if (isTouchingTop)
-                {
-                    animator.SetTrigger("Top");
-                    isTouchingTop = false;
-                    //animator.Play("Top_Hit_Anim");
-                }
-            }
-            else
-            {
-                isTouchingBottom = checkIfTouchingBottom();
-                if (isTouchingBottom)
-                {
-                    animator.SetTrigger("Down");
-                    isTouchingBottom = false;
-                    //animator.Play("Bottom_Hit_Anim");
-                }
-            }
+            // Handle vertical movement
+            if (direction.y > 0 && IsTouching(top))
+                HandleCollision("Top");
+            else if (direction.y < 0 && IsTouching(bottom))
+                HandleCollision("Down");
         }
-    }
-    private bool checkIfTouchingRight()
-    {
-        return Physics2D.OverlapCircle(right.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingLeft()
-    {
-        return Physics2D.OverlapCircle(left.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingTop()
-    {
-        return Physics2D.OverlapCircle(top.position, radius, whatIsGround);
-    }
-    private bool checkIfTouchingBottom()
-    {
-        return Physics2D.OverlapCircle(bottom.position, radius, whatIsGround);
     }
 
-    /*void OnCollisionEnter2D(Collision2D collision)
+    private bool IsTouching(Transform directionTransform)
     {
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            Debug.Log("Mlem");
-            DetermineDirection();
-            moveTween.Kill(); // Stop the current movement
-
-            DOVirtual.DelayedCall(.5f, () =>
-            {
-                MoveToNextWaypoint(); // Continue moving in the new direction after delay
-            });
-        }
-    }*//*
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+        return Physics2D.OverlapCircle(directionTransform.position, radius, whatIsGround);
+    }
+    private void HandleCollision(string direction)
     {
-        if (hit.gameObject.CompareTag("Wall"))
-        {
-            Debug.Log("Mlem");
-        }
-    }*/
+        animator.SetTrigger(direction);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;

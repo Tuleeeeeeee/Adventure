@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
-
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 
 public class Fruit : MonoBehaviour, ICollectible
@@ -25,8 +25,17 @@ public class Fruit : MonoBehaviour, ICollectible
 
     private void Awake()
     {
+        var handle = Addressables.LoadAssetAsync<RuntimeAnimatorController>("Assets/Items/Fruits/Collected.controller");
+        handle.Completed += op =>
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                collectedController = op.Result; 
+            }
+        };
+
+
         animator = GetComponent<Animator>();
-        collectedController = Resources.Load<RuntimeAnimatorController>("Items/Fruits/Collected");
     }
     public void OnCollected()
     {

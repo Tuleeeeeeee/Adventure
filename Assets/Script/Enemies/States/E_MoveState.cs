@@ -7,24 +7,28 @@ public class E_MoveState : EnemiesState
     protected bool isDetectingLedge;
 
     protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
 
+    protected bool performCloseRangeAction;
     public E_MoveState(Entity entity, StateManager stateManager, string animBoolName, D_MoveState stateData) : base(entity, stateManager, animBoolName)
     {
         this.stateData = stateData;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
-        isDetectingLedge = entity.CheckLedge();
-        isDetectingWall = entity.CheckWall();
+        base.DoChecks();
+        isDetectingLedge = CollisionSenses.LedgeVertical;
+        isDetectingWall = CollisionSenses.WallFront;
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
     }
 
     public override void Enter()
     {
         base.Enter();
-        entity.SetVelocity(stateData.movementSpeed);
+        Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
 
     }
 
@@ -38,8 +42,8 @@ public class E_MoveState : EnemiesState
         base.LogicUpdate();
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

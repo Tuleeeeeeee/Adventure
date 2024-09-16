@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerLandState : PlayerGroundState
 {
     public PlayerLandState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
@@ -17,7 +13,7 @@ public class PlayerLandState : PlayerGroundState
             {
                 stateManager.ChangeState(player.MoveState);
             }
-            else if (player.CurrentVelocity.y < 0.01f)
+            else if (Movement?.CurrentVelocity.y < 0.01f)
             {
                 stateManager.ChangeState(player.IdleState);
             }

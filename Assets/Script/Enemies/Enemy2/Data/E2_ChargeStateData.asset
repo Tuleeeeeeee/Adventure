@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f050d3fe459e4a45910ad66e143e143, type: 3}
   m_Name: E2_ChargeStateData
   m_EditorClassIdentifier: 
-  chargeSpeed: 10
-  chargeTime: 4
+  chargeSpeed: 8
+  chargeTime: 2

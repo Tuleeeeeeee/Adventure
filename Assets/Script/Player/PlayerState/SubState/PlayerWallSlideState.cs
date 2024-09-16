@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerWallSlideState : PlayerTouchingWallState
 {
     public PlayerWallSlideState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
@@ -14,8 +10,8 @@ public class PlayerWallSlideState : PlayerTouchingWallState
 
         if (!isExitingState)
         {
-            player.SetVelocityY(-playerData.wallSlideVelocity);
-            player.CanCreateDuskWallJump();
+            Movement?.SetVelocityY(-playerData.wallSlideVelocity);
+       /*     player.CanCreateDuskWallJump();*/
         }
     }
 }

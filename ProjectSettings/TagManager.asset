@@ -5,9 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Audio
-  - DoDamage
-  - Platform
+  - Enemy
   - Trap
+  - Platform
+  - GridPlacedObject
   layers:
   - Default
   - TransparentFX

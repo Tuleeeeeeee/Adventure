@@ -20,10 +20,12 @@ public class PlayerLife : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("DoDamage"))
+        if(collision.gameObject.CompareTag("Trap"))
         {
-            Die();
+           // Die();
+            rb.constraints = RigidbodyConstraints2D.None;
             rb.velocity = new Vector2(rb.velocity.x, deathFroce);
+            rb.AddTorque(-deathFroce);
             boxCollider2d.enabled = false;
             Debug.Log("dead");
         }

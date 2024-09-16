@@ -1,9 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInAirState : PlayerState
 {
+    protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
     private bool isGrounded;
     private bool isTouchingWall;
     private bool isTouchingWallBack;
@@ -12,7 +16,6 @@ public class PlayerInAirState : PlayerState
     private bool jumpInputStop;
     private bool coyoteTime;
     private bool isJumping;
-    private int amountOfJump;
     public PlayerInAirState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
     {
     }
@@ -21,9 +24,9 @@ public class PlayerInAirState : PlayerState
     {
         base.DoCheck();
 
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
-        isTouchingWallBack = player.CheckIfTouchingWallBack();
+        isGrounded = CollisionSenses.Ground;
+        isTouchingWall = CollisionSenses.WallFront;
+        isTouchingWallBack = CollisionSenses.WallBack;
     }
 
     public override void Enter()
@@ -45,17 +48,16 @@ public class PlayerInAirState : PlayerState
         xInput = player.InputHandler.NormInputX;
         jumpInput = player.InputHandler.JumpInput;
         jumpInputStop = player.InputHandler.JumpInputStop;
-        amountOfJump = player.JumpState.AmountOfJumpLeft();
 
         CheckJumpMulitiplier();
 
-        if (isGrounded && player.CurrentVelocity.y < 0.01f)
+        if (isGrounded && Movement?.CurrentVelocity.y < 0.01f)
         {
             stateManager.ChangeState(player.LandState);
         }
         else if (jumpInput && (isTouchingWall || isTouchingWallBack))
         {
-          
+
             player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
             stateManager.ChangeState(player.WallJumpState);
         }
@@ -64,17 +66,17 @@ public class PlayerInAirState : PlayerState
             player.InputHandler.UseJumpInput();
             stateManager.ChangeState(player.JumpState);
         }
-        else if (isTouchingWall && xInput == player.FacingDirection && player.CurrentVelocity.y <= 0)
+        else if (isTouchingWall && xInput == Movement?.FacingDirection && Movement?.CurrentVelocity.y <= 0)
         {
             stateManager.ChangeState(player.WallSlideState);
         }
         else
         {
-            player.CheckIfShouldFlip(xInput);
-            player.SetVelocityX(playerData.movementVelocity * xInput);
+            Movement?.CheckIfShouldFlip(xInput);
+            Movement?.SetVelocityX(playerData.movementVelocity * xInput);
 
-            player.Animator.SetFloat("yVelocity", player.CurrentVelocity.y);
-            player.Animator.SetFloat("xVelocity", Mathf.Abs(player.CurrentVelocity.x));
+            player.Animator.SetFloat("yVelocity", Movement.CurrentVelocity.y);
+            player.Animator.SetFloat("xVelocity", Mathf.Abs(Movement.CurrentVelocity.x));
         }
     }
     private void CheckJumpMulitiplier()
@@ -83,10 +85,10 @@ public class PlayerInAirState : PlayerState
         {
             if (jumpInputStop)
             {
-                player.SetVelocityY(player.CurrentVelocity.y * playerData.variableJumpHeightMultiplier);
+                Movement?.SetVelocityY(Movement.CurrentVelocity.y * playerData.variableJumpHeightMultiplier);
                 isJumping = false;
             }
-            else if (player.CurrentVelocity.y <= 0f)
+            else if (Movement?.CurrentVelocity.y <= 0f)
             {
                 isJumping = false;
             }

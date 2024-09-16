@@ -6,9 +6,9 @@ public class E2_IdleState : E_IdleState
         this.enemy = enemy;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
     }
 
     public override void Enter()
@@ -34,8 +34,8 @@ public class E2_IdleState : E_IdleState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

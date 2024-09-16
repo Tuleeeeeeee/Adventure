@@ -6,9 +6,9 @@ public class E2_MoveState : E_MoveState
         this.enemy = enemy;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
     }
 
     public override void Enter()
@@ -35,8 +35,8 @@ public class E2_MoveState : E_MoveState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

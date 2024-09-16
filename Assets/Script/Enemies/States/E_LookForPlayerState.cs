@@ -6,6 +6,7 @@ public class E_LookForPlayerState : EnemiesState
 
     protected bool turnImmediately;
     protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
     protected bool isAllTurnsDone;
     protected bool isAllTurnsTimeDone;
 
@@ -16,11 +17,12 @@ public class E_LookForPlayerState : EnemiesState
     {
         this.stateData = stateData;
     }
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
 
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
     }
 
     public override void Enter()
@@ -33,7 +35,7 @@ public class E_LookForPlayerState : EnemiesState
         lastTurnTime = startTime;
         amountOfTurnsDone = 0;
 
-        entity.SetVelocity(0f);
+        Movement.SetVelocityX(0f);
     }
 
     public override void Exit()
@@ -47,14 +49,14 @@ public class E_LookForPlayerState : EnemiesState
 
         if (turnImmediately)
         {
-            entity.Flip();
+            Movement.Flip();
             lastTurnTime = Time.time;
             amountOfTurnsDone++;
             turnImmediately = false;
         }
         else if (Time.time >= lastTurnTime + stateData.timeBetweenTurns && !isAllTurnsDone)
         {
-            entity.Flip();
+            Movement.Flip();
             lastTurnTime = Time.time;
             amountOfTurnsDone++;
         }
@@ -70,9 +72,9 @@ public class E_LookForPlayerState : EnemiesState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 
     public void SetTurnImmediately(bool flip)

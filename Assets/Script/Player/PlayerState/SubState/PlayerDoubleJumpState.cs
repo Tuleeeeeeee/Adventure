@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerDoubleJumpState : PlayerAbilityState
 {
     private int amountOfJumpsLeft;
@@ -18,7 +14,7 @@ public class PlayerDoubleJumpState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        player.SetVelocityY(playerData.jumpVelocity);
+        Movement?.SetVelocityY(playerData.jumpVelocity);
         isAbilityDone = true;
         amountOfJumpsLeft--;
         player.InAirState.SetIsJumping();

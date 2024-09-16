@@ -6,7 +6,12 @@ public class E_IdleState : EnemiesState
 
     protected bool flipAfterIdle;
     protected bool isIdleTimeOver;
+
     protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
+
+    protected bool performCloseRangeAction;
+
 
     protected float idleTime;
 
@@ -15,17 +20,20 @@ public class E_IdleState : EnemiesState
         this.stateData = stateData;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
     }
 
     public override void Enter()
     {
         base.Enter();
 
-        entity.SetVelocity(0f);
+        Movement.SetVelocityX(0);
         isIdleTimeOver = false;
         SetRandomIdleTime();
     }
@@ -36,7 +44,7 @@ public class E_IdleState : EnemiesState
 
         if (flipAfterIdle)
         {
-            entity.Flip();
+            Movement.Flip();
         }
     }
 
@@ -50,9 +58,9 @@ public class E_IdleState : EnemiesState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
 
     }
 

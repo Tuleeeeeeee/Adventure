@@ -9,17 +9,22 @@ public class E_ChargeState : EnemiesState
     protected bool isDectectingLedge;
     protected bool isDetectingWall;
     protected bool isChargeTimeOver;
+
+    protected bool performCloseRangeAction;
+
     public E_ChargeState(Entity entity, StateManager stateManager, string animBoolName, D_ChargeState stateData) : base(entity, stateManager, animBoolName)
     {
         this.stateData = stateData;
     }
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
 
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
-        isDectectingLedge = entity.CheckLedge();
-        isDetectingWall = entity.CheckWall();
+        isDectectingLedge = CollisionSenses.LedgeVertical;
+        isDetectingWall = CollisionSenses.WallFront;
+
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
     }
 
     public override void Enter()
@@ -27,7 +32,7 @@ public class E_ChargeState : EnemiesState
         base.Enter();
 
         isChargeTimeOver = false;
-        entity.SetVelocity(stateData.chargeSpeed);
+        Movement.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
     }
 
     public override void Exit()
@@ -45,8 +50,8 @@ public class E_ChargeState : EnemiesState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

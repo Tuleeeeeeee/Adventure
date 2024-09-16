@@ -19,18 +19,26 @@ public class Enemy2 : Entity
     [SerializeField]
     private D_LookForPlayer lookForPlayerData;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         
         MoveState = new E2_MoveState(this, stateManager, "move", moveStateData, this);
         IdleState = new E2_IdleState(this, stateManager, "idle", idleStateData, this);
         ChargeState = new E2_ChargeState(this, stateManager, "charge", chargeStateData, this);
         LookForPlayerState = new E2_LookForPlayerState(this, stateManager, "look", lookForPlayerData, this);
         PlayerDetectedState = new E2_PlayerDetectedState(this, stateManager, "detected", playerDetectedData, this);
+      //  De = new E2_PlayerDetectedState(this, stateManager, "detected", playerDetectedData, this);
+    }
 
-
+    public override void Start()
+    {
         stateManager.InitializeEnemy(MoveState);
+    }
+
+    public override void FixedUpdate()
+    {
+        base.FixedUpdate();
 
     }
 }

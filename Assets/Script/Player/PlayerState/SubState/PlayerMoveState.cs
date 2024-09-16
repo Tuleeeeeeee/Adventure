@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerMoveState : PlayerGroundState
 {
-    private bool isOnPlatform;
     public PlayerMoveState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)
     {
     }
@@ -41,10 +36,10 @@ public class PlayerMoveState : PlayerGroundState
 
        // isOnPlatform = player.CheckIfOnPlatform();
 
-        player.CanCreateDusk(xInput);
+     /*   player.CanCreateDusk(xInput);*/
 
-        player.CheckIfShouldFlip(xInput);
-        player.SetVelocityX(playerData.movementVelocity * xInput);
+        Movement?.CheckIfShouldFlip(xInput);
+        Movement?.SetVelocityX(playerData.movementVelocity * xInput);
         
         if (xInput == 0 && !isExitingState)
         {

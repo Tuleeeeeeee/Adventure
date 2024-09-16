@@ -23,14 +23,11 @@ public class E1_MoveState : E_MoveState
         base.LogicUpdate();
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
-        if (isPlayerInMinAgroRange)
-        {
-           // stateManager.ChangeEnemyState(enemy.PlayerDetectedState);
-        }
-        else if (isDetectingWall || !isDetectingLedge)
+        base.PhysicsUpdate();
+
+        if (isDetectingWall || !isDetectingLedge)
         {
             enemy.IdleState.SetFlipAfterIdle(true);
             stateManager.ChangeEnemyState(enemy.IdleState);

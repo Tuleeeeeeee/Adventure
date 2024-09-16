@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerJumpState : PlayerAbilityState
 {
     private int amountOfJumpsLeft;
@@ -14,9 +10,9 @@ public class PlayerJumpState : PlayerAbilityState
     {
         base.Enter();
         player.InputHandler.UseJumpInput();
-        player.CanCreateDuskJump();
-        player.JumpAudio();
-        player.SetVelocityY(playerData.jumpVelocity);
+    /*    player.CanCreateDuskJump();
+        player.JumpAudio();*/
+        Movement?.SetVelocityY(playerData.jumpVelocity);
         isAbilityDone = true;
         amountOfJumpsLeft--;
         player.InAirState.SetIsJumping();

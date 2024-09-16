@@ -1,29 +1,32 @@
 using UnityEngine;
 
-public class EnemiesState 
+public class EnemiesState
 {
+    protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    protected Movement movement;
+    protected CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+    protected CollisionSenses collisionSenses;
+
     protected Entity entity;
     protected StateManager stateManager;
-
-    protected bool isAnimationFinished;
+    protected Core core;
     protected bool isExitingState;
-
-    protected float startTime;
+    public float startTime { get; protected set; }
 
     private string animBoolName;
-    public EnemiesState (Entity entity, StateManager stateManager, string animBoolName)
+    public EnemiesState(Entity entity, StateManager stateManager, string animBoolName)
     {
         this.entity = entity;
         this.stateManager = stateManager;
         this.animBoolName = animBoolName;
+        core = entity.Core;
     }
     public virtual void Enter()
     {
-        DoCheck();
+        DoChecks();
         startTime = Time.time;
         entity.Animator.SetBool(animBoolName, true);
-        Debug.Log($"Enemies: {animBoolName}");
-        isAnimationFinished = false;
+        Debug.Log($"{entity.name}: {animBoolName}");
         isExitingState = false;
     }
     public virtual void Exit()
@@ -35,22 +38,12 @@ public class EnemiesState
     {
 
     }
-    public virtual void PhysicUpdate()
+    public virtual void PhysicsUpdate()
     {
-        DoCheck();
+        DoChecks();
     }
-    public virtual void DoCheck()
+    public virtual void DoChecks()
     {
 
-    }
-    public virtual void AnimationTrigger()
-    {
-
-    }
-
-    public virtual void AnimationFinishedTrigger() => isAnimationFinished = true;
-    public virtual void DebugLog(string nameEnemy)
-    {
-        Debug.Log($"{nameEnemy}: {animBoolName}");
     }
 }

@@ -9,18 +9,24 @@ public class E_PlayerDetectedState : EnemiesState
     protected bool isPlayerInMaxAgroRange;
 
     protected bool performLongRangeAction;
+    protected bool performCloseRangeAction;
+
+    protected bool isDetectingLedge;
 
     public E_PlayerDetectedState(Entity entity, StateManager stateManager, string animBoolName, D_PlayerDetected stateData) : base(entity, stateManager, animBoolName)
     {
         this.stateData = stateData;
     }
 
-    public override void DoCheck()
+    public override void DoChecks()
     {
-        base.DoCheck();
+        base.DoChecks();
 
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
         isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+
+        isDetectingLedge = CollisionSenses.LedgeVertical;
+        performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();
     }
 
     public override void Enter()
@@ -29,7 +35,7 @@ public class E_PlayerDetectedState : EnemiesState
 
         performLongRangeAction = false;
 
-        entity.SetVelocity(0f);
+        Movement.SetVelocityX(0f);
 
     }
 
@@ -47,8 +53,8 @@ public class E_PlayerDetectedState : EnemiesState
         }
     }
 
-    public override void PhysicUpdate()
+    public override void PhysicsUpdate()
     {
-        base.PhysicUpdate();
+        base.PhysicsUpdate();
     }
 }

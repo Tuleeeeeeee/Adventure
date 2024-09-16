@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Trampoline : MonoBehaviour
 {
+    [SerializeField]
     private float bounceForce = 30;
     [SerializeField]
     private Animator animator;

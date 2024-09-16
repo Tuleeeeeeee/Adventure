@@ -1,9 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerTouchingWallState : PlayerState
 {
+    protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
+    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
     protected bool isGrounded;
     protected bool isTouchingWall;
     protected int xInput;
@@ -25,8 +27,8 @@ public class PlayerTouchingWallState : PlayerState
     public override void DoCheck()
     {
         base.DoCheck();
-        isGrounded = player.CheckIfGrounded();
-        isTouchingWall = player.CheckIfTouchingWall();
+        isGrounded = CollisionSenses.Ground;
+        isTouchingWall = CollisionSenses.WallFront;
     }
 
     public override void Enter()
@@ -45,17 +47,17 @@ public class PlayerTouchingWallState : PlayerState
 
         xInput = player.InputHandler.NormInputX;
         JumpInput = player.InputHandler.JumpInput;
-        if(JumpInput)
+        if (JumpInput)
         {
-           
+
             player.WallJumpState.DetermineWallJumpDirection(isTouchingWall);
             stateManager.ChangeState(player.WallJumpState);
         }
-        else if(isGrounded)
+        else if (isGrounded)
         {
             stateManager.ChangeState(player.IdleState);
         }
-        else if(!isTouchingWall || xInput != player.FacingDirection) 
+        else if (!isTouchingWall || xInput != Movement.FacingDirection)
         {
             stateManager.ChangeState(player.InAirState);
         }

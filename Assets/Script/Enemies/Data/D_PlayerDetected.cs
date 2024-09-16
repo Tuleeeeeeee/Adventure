@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "newPlayerDetectedStateData", menuName = "Data/Enemies State Data/Player Detected State")]
