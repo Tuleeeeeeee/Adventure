@@ -10,6 +10,8 @@ public class EnemiesState
     protected Entity entity;
     protected StateManager stateManager;
     protected Core core;
+
+    protected bool isAnimationFinished;
     protected bool isExitingState;
     public float startTime { get; protected set; }
 
@@ -27,6 +29,7 @@ public class EnemiesState
         startTime = Time.time;
         entity.Animator.SetBool(animBoolName, true);
         Debug.Log($"{entity.name}: {animBoolName}");
+        isAnimationFinished = false;
         isExitingState = false;
     }
     public virtual void Exit()
@@ -46,4 +49,9 @@ public class EnemiesState
     {
 
     }
+    public virtual void AnimationTrigger()
+    {
+
+    }
+    public virtual void AnimationFinishedTrigger() => isAnimationFinished = true;
 }

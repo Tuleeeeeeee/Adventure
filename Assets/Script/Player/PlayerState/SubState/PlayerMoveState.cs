@@ -34,13 +34,10 @@ public class PlayerMoveState : PlayerGroundState
     {
         base.LogicUpdate();
 
-       // isOnPlatform = player.CheckIfOnPlatform();
-
-     /*   player.CanCreateDusk(xInput);*/
-
         Movement?.CheckIfShouldFlip(xInput);
         Movement?.SetVelocityX(playerData.movementVelocity * xInput);
-        
+        ParticleEffect.DustMove();
+
         if (xInput == 0 && !isExitingState)
         {
             stateManager.ChangeState(player.IdleState);

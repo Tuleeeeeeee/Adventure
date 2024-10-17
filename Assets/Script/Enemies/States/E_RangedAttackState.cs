@@ -12,6 +12,14 @@ public class E_RangedAttackState : E_AttackState
         this.stateData = stateData;
     }
 
+    public override void AnimationTrigger()
+    {
+        base.AnimationTrigger();
+        projectile = GameObject.Instantiate(stateData.projectile, attackPosition.position, attackPosition.rotation);
+        projectileScript = projectile.GetComponent<Projectile>();
+        projectileScript.FireProjectile(stateData.projectileSpeed * Movement.FacingDirection, stateData.projectileTravelDistance, stateData.projectileDamage);
+    }
+
     public override void DoChecks()
     {
         base.DoChecks();
@@ -34,15 +42,6 @@ public class E_RangedAttackState : E_AttackState
 
     public override void PhysicsUpdate()
     {
-        base.PhysicsUpdate();
-    }
-
-    public override void TriggerAttack()
-    {
-        base.TriggerAttack();
-
-        projectile = GameObject.Instantiate(stateData.projectile, attackPosition.position, attackPosition.rotation);
-        projectileScript = projectile.GetComponent<Projectile>();
-        projectileScript.FireProjectile(stateData.projectileSpeed * Movement.FacingDirection, stateData.projectileTravelDistance, stateData.projectileDamage);
+        base.PhysicsUpdate();   
     }
 }

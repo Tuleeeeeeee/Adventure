@@ -1,11 +1,11 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Stats : CoreComponent
 {
     public event Action OnHealthZero;
-    public bool IsDead { get => isDead; set => isDead = value; }
+    public bool IsDead { get => isDead; private set => isDead = value; }
+    public float CurrentHealth { get => currentHealth; private set => currentHealth = value; }
 
     [SerializeField]
     private float maxHealth = 100;

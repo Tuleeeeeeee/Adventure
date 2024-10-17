@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9891f14257c76f3439cbc55bd22821e9, type: 3}
+  m_Name: E10_MoveAndAttack
+  m_EditorClassIdentifier: 
+  ellipses:
+  - {x: 3.5, y: 0.75}
+  speed: 1
+  center: {x: -10.102405, y: 4.0174546}
+  switchCooldown: 5
+  timeSinceLastSwitch: 3.3999975
+  angle: 2.739998
+  currentPath: 0
+  targetPosition: {x: 6.691171, y: 2.3931649}
+  projectile: {fileID: 303855312112892528, guid: 1cc51ed00bc3ad245b53139341515920, type: 3}
+  projectileDamage: 100
+  projectileSpeed: 12
+  projectileTravelDistance: 0

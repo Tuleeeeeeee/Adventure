@@ -30,7 +30,7 @@ public class Fruit : MonoBehaviour, ICollectible
         {
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                collectedController = op.Result; 
+                collectedController = op.Result;
             }
         };
 
@@ -39,10 +39,26 @@ public class Fruit : MonoBehaviour, ICollectible
     }
     public void OnCollected()
     {
-
         Debug.Log($"Hi You Have Collected {ItemType}");
+        GetComponent<Collider2D>().enabled = false;
         OnCollectiblesCollected?.Invoke(incrementValue, ItemType);
-        animator.runtimeAnimatorController = collectedController;
+        switch (ItemType)
+        {
+            case CollectibleType.Fruit:
+                animator.runtimeAnimatorController = collectedController;
+                break;
+
+            case CollectibleType.Boost:
+                animator.SetTrigger("hit");
+                Rigidbody2D playerRb = FindObjectOfType<Player>().GetComponent<Rigidbody2D>();
+                if (playerRb != null)
+                {
+                    float boostForce = incrementValue;
+                    //    playerRb.velocity = new Vector2(playerRb.velocity.x, 0);
+                    playerRb.velocity = new Vector2(playerRb.velocity.x, boostForce);
+                }
+                break;
+        }
         Destroy(gameObject, .5f);
     }
 }

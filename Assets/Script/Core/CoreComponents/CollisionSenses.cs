@@ -30,6 +30,7 @@ public class CollisionSenses : CoreComponent
     }
     public Vector2 GroundCheckSize { get => groundCheckSize; set => groundCheckSize = value; }
     public float WallCheckDistance { get => wallCheckDistance; set => wallCheckDistance = value; }
+    public float LedgeCheckDistance { get => ledgeCheckDistance; set => ledgeCheckDistance = value; }
     public LayerMask WhatIsGround { get => whatIsGround; set => whatIsGround = value; }
 
     [SerializeField]
@@ -42,6 +43,8 @@ public class CollisionSenses : CoreComponent
     private Vector2 groundCheckSize;
     [SerializeField]
     private float wallCheckDistance;
+    [SerializeField]
+    private float ledgeCheckDistance;
 
     [SerializeField]
     private LayerMask whatIsGround;
@@ -70,7 +73,7 @@ public class CollisionSenses : CoreComponent
 
     public bool LedgeVertical
     {
-        get => Physics2D.Raycast(LedgeCheckVertical.position, Vector2.down, wallCheckDistance, whatIsGround);
+        get => Physics2D.Raycast(LedgeCheckVertical.position, Vector2.down, ledgeCheckDistance, whatIsGround);
     }
 
     public bool WallBack
@@ -82,23 +85,23 @@ public class CollisionSenses : CoreComponent
     {
         if (!Application.isPlaying) return;
 
-        if (groundCheck)
+        if (GroundCheck)
         {
             Gizmos.color = Ground ? Color.green : Color.red;
             Gizmos.DrawCube(GroundCheck.position, groundCheckSize);
         }
-        if (ledgeCheckVertical)
+        if (LedgeCheckVertical)
         {
             Gizmos.color = LedgeVertical ? Color.green : Color.red;
-            Gizmos.DrawLine(LedgeCheckVertical.position, LedgeCheckVertical.position + (Vector3)(Vector2.down * wallCheckDistance));
+            Gizmos.DrawLine(LedgeCheckVertical.position, LedgeCheckVertical.position + (Vector3)(Vector2.down * ledgeCheckDistance));
         }
-        if (wallCheck)
+        if (WallCheck)
         {
             Gizmos.color = WallFront ? Color.green : Color.red;
-            Gizmos.DrawLine(WallCheck.position, WallCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection));
+            Gizmos.DrawLine(WallCheck.position, WallCheck.position + (Vector3)(Vector2.right * Movement.FacingDirection * wallCheckDistance));
 
             Gizmos.color = WallBack ? Color.green : Color.red;
-            Gizmos.DrawLine(WallCheck.position, WallCheck.position + (Vector3)(Vector2.right * -Movement.FacingDirection));
+            Gizmos.DrawLine(WallCheck.position, WallCheck.position + (Vector3)(Vector2.right * -Movement.FacingDirection * wallCheckDistance));
         }
 
     }

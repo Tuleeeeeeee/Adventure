@@ -52,13 +52,10 @@ public class MovingPlatform : MonoBehaviour
     private float zigzagLineDistance = 2;
     private float zigzagStep;
     private bool zigzagMovingPositive = true;
-    private Player player;
-    private Rigidbody2D rb;
-    private Vector3 direction;
+
     // Start is called before the first frame update
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
     }
     void Start()
     {
@@ -165,6 +162,7 @@ public class MovingPlatform : MonoBehaviour
         Gizmos.color = gizmoColor;
         Vector3 src = Vector3.zero;
         Vector3 dest = Vector3.zero;
+
 
         switch (movementType)
         {

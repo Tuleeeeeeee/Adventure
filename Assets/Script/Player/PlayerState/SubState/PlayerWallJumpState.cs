@@ -10,10 +10,9 @@ public class PlayerWallJumpState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        player.InputHandler.UseJumpInput();
+        player.InputHandler.UsedJumpInput();
         player.JumpState.ResetAmountOfJumpsLeft();
-        /*     player.JumpAudio();
-             player.CanCreateDuskWallJump();*/
+        ParticleEffect.DustWallJump();
         Movement?.SetVelocity(playerData.wallJumpVelocity, playerData.wallJumpAngle, wallJumpDirection);
         Movement?.CheckIfShouldFlip(wallJumpDirection);
         player.JumpState.DecreaseAmountOfJumpsLeft();

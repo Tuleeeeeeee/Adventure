@@ -7,8 +7,7 @@ TagManager:
   - Audio
   - Enemy
   - Trap
-  - Platform
-  - GridPlacedObject
+  - Fruit
   layers:
   - Default
   - TransparentFX

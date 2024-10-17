@@ -39,7 +39,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
 
     }
-    public void UseJumpInput() => JumpInput = false;
+    public void UsedJumpInput() => JumpInput = false;
     private void CheckJumpInputHoldTime()
     {
         if (Time.time >= jumpInputStartTime + inputHoldTime)

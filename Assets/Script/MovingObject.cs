@@ -8,8 +8,6 @@ public class MovingObject : MonoBehaviour
     [SerializeField]
     private GameObject[] waypoints;
     [SerializeField]
-    Transform left, right, top, bottom;
-    [SerializeField]
     private LayerMask whatIsGround;
 
 
@@ -18,7 +16,7 @@ public class MovingObject : MonoBehaviour
 
 
     [SerializeField]
-    private float radius;
+    private float checkDistance;
 
     private Tween moveTween;
     private Animator animator;
@@ -30,7 +28,7 @@ public class MovingObject : MonoBehaviour
     }
     private void Update()
     {
-        DetermineDirection();
+        determineDirection();
     }
 
     private void MoveToNextWaypoint()
@@ -40,26 +38,6 @@ public class MovingObject : MonoBehaviour
 
         moveTween = transform.DOMove(waypoints[currentWaypointIndex].transform.position, duration).SetEase(Ease.InQuart).OnComplete(() =>
         {
-            // Change direction at the end/beginning
-            /* if (currentWaypointIndex == 0 && !isMovingForward)
-             {
-                 isMovingForward = true;
-             }
-             else if (currentWaypointIndex == waypoints.Length - 1 && isMovingForward)
-             {
-                 isMovingForward = false;
-             }
-
-             // Update index based on direction
-             currentWaypointIndex += (isMovingForward ? 1 : -1);*/
-
-            // Loop back to the beginning if needed
-            /*if (currentWaypointIndex < 0)
-            {
-                currentWaypointIndex = 1; // Set to 1 because we're reversing direction
-                isMovingForward = true;
-            }*/
-
             currentWaypointIndex++;
 
             // If we reached the last waypoint, loop back to the first one
@@ -72,43 +50,42 @@ public class MovingObject : MonoBehaviour
         });
 
     }
-    void DetermineDirection()
+    private void determineDirection()
     {
         Vector2 direction = waypoints[currentWaypointIndex].transform.position - transform.position;
 
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
             // Handle horizontal movement
-            if (direction.x > 0 && IsTouching(right))
-                HandleCollision("Right");
-            else if (direction.x < 0 && IsTouching(left))
-                HandleCollision("Left");
+            if (direction.x > 0 && isTouching(Vector2.right))
+                handleCollisionAnimator("Right");
+            else if (direction.x < 0 && isTouching(Vector2.left))
+                handleCollisionAnimator("Left");
         }
         else
         {
             // Handle vertical movement
-            if (direction.y > 0 && IsTouching(top))
-                HandleCollision("Top");
-            else if (direction.y < 0 && IsTouching(bottom))
-                HandleCollision("Down");
+            if (direction.y > 0 && isTouching(Vector2.up))
+                handleCollisionAnimator("Top");
+            else if (direction.y < 0 && isTouching(Vector2.down))
+                handleCollisionAnimator("Down");
         }
     }
 
-    private bool IsTouching(Transform directionTransform)
+    private bool isTouching(Vector2 direction)
     {
-        return Physics2D.OverlapCircle(directionTransform.position, radius, whatIsGround);
+        return Physics2D.Raycast(transform.position, direction, checkDistance, whatIsGround);
     }
-    private void HandleCollision(string direction)
+    private void handleCollisionAnimator(string direction)
     {
         animator.SetTrigger(direction);
     }
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.black;
-        Gizmos.DrawSphere(left.position, radius);
-        Gizmos.DrawSphere(right.position, radius);
-        Gizmos.DrawSphere(top.position, radius);
-        Gizmos.DrawSphere(bottom.position, radius);
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(checkDistance * Vector2.up));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(checkDistance * Vector2.down));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(checkDistance * Vector2.left));
+        Gizmos.DrawLine(transform.position, transform.position + (Vector3)(checkDistance * Vector2.right));
     }
 }
 

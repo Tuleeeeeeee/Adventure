@@ -2,14 +2,8 @@ using UnityEngine;
 public class Combat : CoreComponent, IDamageable
 {
   /*  private Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-    private CollisionSenses CollisionSenses
-    {
-        get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses);
     }*/
     private Stats Stats { get => stats ?? core.GetCoreComponent(ref stats); }
-
-    private Movement movement;
-    private CollisionSenses collisionSenses;
     private Stats stats;
 
     public void Damage(float amount)

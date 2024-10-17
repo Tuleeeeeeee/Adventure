@@ -25,7 +25,7 @@ public class Death : CoreComponent
                 //ParticleManager.StartParticles(particle);
             }*/
         animator.SetBool("hit", true);
-        Invoke(nameof(setActive), 2f);
+       // Invoke(nameof(setActive), 2f);
     }
     private void setActive()
     {

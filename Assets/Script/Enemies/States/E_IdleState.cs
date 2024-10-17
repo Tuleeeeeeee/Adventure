@@ -12,7 +12,6 @@ public class E_IdleState : EnemiesState
 
     protected bool performCloseRangeAction;
 
-
     protected float idleTime;
 
     public E_IdleState(Entity entity, StateManager stateManager, string animBoolName, D_IdleState stateData) : base(entity, stateManager, animBoolName)
@@ -23,6 +22,7 @@ public class E_IdleState : EnemiesState
     public override void DoChecks()
     {
         base.DoChecks();
+
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
         isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
 
@@ -45,13 +45,14 @@ public class E_IdleState : EnemiesState
         if (flipAfterIdle)
         {
             Movement.Flip();
+            flipAfterIdle = false;
         }
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        Movement.SetVelocityX(0);
         if (Time.time >= startTime + idleTime)
         {
             isIdleTimeOver = true;

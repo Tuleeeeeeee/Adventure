@@ -5,6 +5,12 @@ public class Player : MonoBehaviour
     private CollisionSenses CollisionSenses { get => collisionSenses ?? Core.GetCoreComponent(ref collisionSenses); }
 
     private CollisionSenses collisionSenses;
+    private Stats Stats { get => stats ?? Core.GetCoreComponent(ref stats); }
+
+    private Stats stats;
+    private Movement Movement { get => movement ?? Core.GetCoreComponent(ref movement); }
+
+    private Movement movement;
     public StateManager StateManager { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
@@ -65,6 +71,8 @@ public class Player : MonoBehaviour
     {
         Core.LogicUpdate();
         StateManager.CurrentPlayerState.LogicUpdate();
+
+        
     }
     private void FixedUpdate()
     {
@@ -83,14 +91,21 @@ public class Player : MonoBehaviour
     private void AnimationFinishTrigger() => StateManager.CurrentPlayerState.AnimationFinishedTrigger();
     private void attackEnemy()
     {
+        if (Stats.IsDead)
+        {
+            return;
+        }
         Collider2D enemyHit = Physics2D.OverlapBox(CollisionSenses.GroundCheck.position, CollisionSenses.GroundCheckSize, 0f, playerData.whatIsEnemy);
         if (enemyHit)
         {
-            IDamageable damageable = enemyHit.GetComponent<IDamageable>();
-            if (damageable != null)
+            if (Movement?.CurrentVelocity.y <= 0f)
             {
-                damageable.Damage(100);
-                RB.velocity = new Vector2(RB.velocity.x, 20f);
+                IDamageable damageable = enemyHit.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    damageable.Damage(100);
+                    RB.velocity = new Vector2(RB.velocity.x, 20f);
+                }
             }
         }
     }

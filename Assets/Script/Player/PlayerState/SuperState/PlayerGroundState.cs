@@ -1,10 +1,12 @@
 public class PlayerGroundState : PlayerState
 {
     protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+    protected CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+    protected ParticleEffect ParticleEffect { get => particleEffect ?? core.GetCoreComponent(ref particleEffect); }
 
     private Movement movement;
     private CollisionSenses collisionSenses;
+    private ParticleEffect particleEffect;
 
     protected int xInput;
     private bool jumpInput;
@@ -35,6 +37,7 @@ public class PlayerGroundState : PlayerState
         base.Enter();
 
         player.JumpState.ResetAmountOfJumpsLeft();
+
     }
 
     public override void Exit()

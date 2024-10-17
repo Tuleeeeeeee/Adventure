@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Entity : MonoBehaviour
 {
     protected Movement Movement { get => movement ?? Core.GetCoreComponent(ref movement); }
@@ -8,14 +10,20 @@ public class Entity : MonoBehaviour
     public Core Core { get; private set; }
     public StateManager stateManager;
     public D_Entity entityData;
+
     public Rigidbody2D RB { get; private set; }
     public Animator Animator { get; private set; }
     public AnimationToStatemachine ATSM { get; private set; }
 
     private Movement movement;
     private Stats stats;
-    private Transform playerCheck;
-    private Transform damageableArea;
+
+    public Transform playerCheck { get; private set; }
+    public Transform jumpCheck { get; private set; }
+    public Transform damageableArea { get; private set; }
+
+    [SerializeField]
+    private bool flip;
 
     public virtual void Awake()
     {
@@ -23,8 +31,9 @@ public class Entity : MonoBehaviour
 
         try
         {
-            damageableArea = transform.Find("DamageableArea").gameObject.transform;
-            playerCheck = transform.Find("PlayerCheck").gameObject.transform;
+            damageableArea = transform.Find("DamageableArea")?.gameObject.transform;
+            playerCheck = transform.Find("PlayerCheck")?.gameObject.transform;
+            jumpCheck = transform.Find("JumpCheck")?.gameObject.transform;
         }
         catch (NullReferenceException)
         {
@@ -41,7 +50,10 @@ public class Entity : MonoBehaviour
     }
     public virtual void Start()
     {
-
+        if (flip)
+        {
+            Movement?.Flip();
+        }
     }
 
     public virtual void Update()
@@ -58,19 +70,10 @@ public class Entity : MonoBehaviour
         stateManager.CurrentEnemyState.PhysicsUpdate();
         ExecutePlayer();
     }
-    /*
-        public virtual void CheckPlayerInDamageArea()
-        {
-            Collider2D takeDamageArea = Physics2D.OverlapBox(damageableArea.position, entityData.damageableAreaSize, 0f, entityData.whatIsPlayer);
-            if (takeDamageArea)
-            {
-                IDamageable damageable = takeDamageArea.GetComponent<IDamageable>();
-                if (damageable != null)
-                {
-                    damageable.Damage(100f);
-                }
-            }
-        }*/
+    public virtual bool CheckIfCanJump()
+    {
+        return Physics2D.OverlapCircle(jumpCheck.position, 0.4f, entityData.whatIsGround);
+    }
     public virtual bool CheckPlayerInMinAgroRange()
     {
         RaycastHit2D hit = Physics2D.Raycast(playerCheck.position, transform.right * Movement.FacingDirection, entityData.minAgroDistance,
@@ -114,31 +117,44 @@ public class Entity : MonoBehaviour
             }
         }
     }
-    public virtual void OnDead(EnemiesState deadState)
+    public virtual void UpdateDamageableArea(Vector2 newSize, Vector3 newPosition)
     {
-        if (Stats.IsDead)
-            stateManager.ChangeEnemyState(deadState);
+        // Update the size of the damageable area
+        entityData.damageableAreaSize = newSize;
+
+        // Update the local position of the damageable area
+        damageableArea.transform.localPosition = newPosition;
     }
+    private void AnimtionFinishTrigger() => stateManager.CurrentEnemyState.AnimationFinishedTrigger();
+    private void AnimationTrigger() => stateManager.CurrentEnemyState.AnimationTrigger();
     public virtual void OnDrawGizmos()
     {
         if (!Core) return;
 
-        if (!damageableArea) return;
-        Gizmos.DrawCube(damageableArea.position, entityData.damageableAreaSize);
+        if (damageableArea)
+        {
+            Gizmos.DrawCube(damageableArea.position, entityData.damageableAreaSize);
+        }
 
-        if (!playerCheck) return;
-        //Min
-        Gizmos.color = CheckPlayerInMinAgroRange() ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(playerCheck.position + (entityData.minAgroDistance * Movement.FacingDirection * transform.right), 0.6f);
+        if (playerCheck)
+        {
+            //Min
+            Gizmos.color = CheckPlayerInMinAgroRange() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(playerCheck.position + (entityData.minAgroDistance * Movement.FacingDirection * transform.right), 0.6f);
+            //Max
+            Gizmos.color = CheckPlayerInMaxAgroRange() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(playerCheck.position + (entityData.maxAgroDistance * Movement.FacingDirection * transform.right), 0.4f);
+            //
+            Gizmos.color = CheckPlayerInCloseRangeAction() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(playerCheck.position + (entityData.closeRangeActionDistance * Movement.FacingDirection * transform.right), 0.8f);
+        }
 
-        //Max
-        Gizmos.color = CheckPlayerInMaxAgroRange() ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(playerCheck.position + (entityData.maxAgroDistance * Movement.FacingDirection * transform.right), 0.4f);
-
-        //
-        Gizmos.color = CheckPlayerInCloseRangeAction() ? Color.green : Color.red;
-        Gizmos.DrawWireSphere(playerCheck.position + (entityData.closeRangeActionDistance * Movement.FacingDirection * transform.right), 0.8f);
-
+        if (jumpCheck)
+        {
+            Gizmos.color = CheckIfCanJump() ? Color.green : Color.red;
+            Gizmos.DrawWireSphere(jumpCheck.position, 0.8f);
+        }
 
     }
+
 }

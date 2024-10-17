@@ -4,7 +4,6 @@ public class E_AttackState : EnemiesState
 {
     protected Transform attackPosition;
 
-    protected bool isAnimationFinished;
     protected bool isPlayerInMinAgroRange;
     protected bool isPlayerInMaxAgroRange;
     public E_AttackState(Entity entity, StateManager stateManager, string animBoolName, Transform attackPosition) : base(entity, stateManager, animBoolName)
@@ -23,7 +22,6 @@ public class E_AttackState : EnemiesState
     {
         base.Enter();
 
-        entity.ATSM.attackState = this;
         isAnimationFinished = false;
         Movement.SetVelocityX(0f);
     }
@@ -42,14 +40,13 @@ public class E_AttackState : EnemiesState
     {
         base.PhysicsUpdate();
     }
-
-    public virtual void TriggerAttack()
+    public override void AnimationTrigger()
     {
-
+        base.AnimationTrigger();
     }
 
-    public virtual void FinishAttack()
+    public override void AnimationFinishedTrigger()
     {
-        isAnimationFinished = true;
+        base.AnimationFinishedTrigger();
     }
 }

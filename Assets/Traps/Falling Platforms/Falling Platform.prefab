@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6555898459175399068}
   - component: {fileID: 6555898459175399069}
   - component: {fileID: 6555898459175399070}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Falling Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,8 +75,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 298595727
-  m_SortingLayer: 0
+  m_SortingLayerID: -301452083
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -1799349824, guid: 1ceaea3f14529ef499bf85582584f773, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -163,7 +163,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6555898459175399071}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -193,7 +193,7 @@ PlatformEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 2147483647
+    m_Bits: 8
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
@@ -217,3 +217,5 @@ MonoBehaviour:
   destroyDelay: 0.9
   rb: {fileID: 6555898459175399068}
   animator: {fileID: 6555898459175399064}
+  floatAmplitude: 0.2
+  floatSpeed: 2

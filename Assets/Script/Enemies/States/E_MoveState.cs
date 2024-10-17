@@ -20,6 +20,8 @@ public class E_MoveState : EnemiesState
         base.DoChecks();
         isDetectingLedge = CollisionSenses.LedgeVertical;
         isDetectingWall = CollisionSenses.WallFront;
+
+   
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
         isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
         performCloseRangeAction = entity.CheckPlayerInCloseRangeAction();

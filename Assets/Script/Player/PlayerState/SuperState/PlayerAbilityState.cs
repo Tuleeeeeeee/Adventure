@@ -1,10 +1,12 @@
 public class PlayerAbilityState : PlayerState
 {
     protected Movement Movement { get => movement ?? core.GetCoreComponent(ref movement); }
-    private CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+    protected CollisionSenses CollisionSenses { get => collisionSenses ?? core.GetCoreComponent(ref collisionSenses); }
+    protected ParticleEffect ParticleEffect { get => particleEffect ?? core.GetCoreComponent(ref particleEffect); }
 
     private Movement movement;
     private CollisionSenses collisionSenses;
+    private ParticleEffect particleEffect;
     protected bool isAbilityDone;
     protected bool isGrounded;
     public PlayerAbilityState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) : base(player, stateManager, playerData, animBoolName)

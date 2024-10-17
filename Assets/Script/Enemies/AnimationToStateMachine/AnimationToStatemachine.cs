@@ -1,36 +1,50 @@
-using Unity.VisualScripting;
-using UnityEngine;
 
+
+using UnityEngine;
 public class AnimationToStatemachine : MonoBehaviour
 {
-    public E_AttackState attackState;
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
-    private void TriggerAttack()
+    private MonoBehaviour[] scripts;
+    private void Start()
     {
-        attackState.TriggerAttack();
-    }
-
-    private void FinishAttack()
-    {
-        attackState.FinishAttack();
+        scripts = gameObject.GetComponents<MonoBehaviour>();
     }
     private void DisableObject()
     {
+        DisableAllScripts();
+
         Transform objectCTransform = transform.Find("Core");
-        boxCollider = objectCTransform.GetComponentInChildren<BoxCollider2D>();
-        boxCollider.enabled = false;
-      
+        if (objectCTransform != null)
+        {
+            boxCollider = objectCTransform.GetComponentInChildren<BoxCollider2D>();
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = false;
+            }
+        }
+
         rb = GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(rb.velocity.x, 20f);
-        rb.constraints = RigidbodyConstraints2D.None;
-        rb.gravityScale = 5f;
-        rb.AddTorque(-20f);
-        
-        //Invoke(nameof(OnDead), 2f);
+        if (rb != null)
+        {
+            rb.velocity = new Vector2(2f, 20f);
+            rb.constraints = RigidbodyConstraints2D.None;
+            rb.gravityScale = 5f;
+            rb.AddTorque(-20f);
+        }
+
+        Invoke(nameof(OnDead), 2f);
     }
     private void OnDead()
     {
-        transform.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+    }
+    private void DisableAllScripts()
+    {
+        foreach (var script in scripts)
+        {
+            script.enabled = false;
+        }
     }
 }
+

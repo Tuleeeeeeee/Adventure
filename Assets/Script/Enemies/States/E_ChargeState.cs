@@ -6,6 +6,8 @@ public class E_ChargeState : EnemiesState
     protected D_ChargeState stateData;
 
     protected bool isPlayerInMinAgroRange;
+    protected bool isPlayerInMaxAgroRange;
+
     protected bool isDectectingLedge;
     protected bool isDetectingWall;
     protected bool isChargeTimeOver;
@@ -21,6 +23,8 @@ public class E_ChargeState : EnemiesState
         base.DoChecks();
 
         isPlayerInMinAgroRange = entity.CheckPlayerInMinAgroRange();
+        isPlayerInMaxAgroRange = entity.CheckPlayerInMaxAgroRange();
+
         isDectectingLedge = CollisionSenses.LedgeVertical;
         isDetectingWall = CollisionSenses.WallFront;
 

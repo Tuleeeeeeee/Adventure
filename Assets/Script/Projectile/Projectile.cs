@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
    // private AttackDetails attackDetails;
@@ -30,13 +31,18 @@ public class Projectile : MonoBehaviour
     public GameObject bulletPart2; // Reference to the second part of the split bullet
 
     public float splitForce = 5f;
+    [SerializeField]
+    private bool shotDown;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
         rb.gravityScale = 0.0f;
+        if(!shotDown)
         rb.velocity = transform.right * speed;
+        else 
+        rb.velocity = -transform.up * speed;
 
         isGravityOn = false;
 

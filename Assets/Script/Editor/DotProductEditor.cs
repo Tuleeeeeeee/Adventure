@@ -1,5 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
+#endif
 public class DotProductEditor //: EditorWindow
 {
     /*public Vector3 m_p0;
