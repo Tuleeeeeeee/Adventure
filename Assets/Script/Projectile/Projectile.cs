@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Projectile : MonoBehaviour
 {
-   // private AttackDetails attackDetails;
+    // private AttackDetails attackDetails;
 
     private float speed;
     private float travelDistance;
@@ -24,8 +24,8 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private LayerMask whatIsPlayer;
     [SerializeField]
-    private Transform damagePosition;  
-   
+    private Transform damagePosition;
+
 
     public GameObject bulletPart1; // Reference to the first part of the split bullet
     public GameObject bulletPart2; // Reference to the second part of the split bullet
@@ -33,16 +33,17 @@ public class Projectile : MonoBehaviour
     public float splitForce = 5f;
     [SerializeField]
     private bool shotDown;
-
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
+    }
+    public void Initialize()
+    {
         rb.gravityScale = 0.0f;
-        if(!shotDown)
-        rb.velocity = transform.right * speed;
-        else 
-        rb.velocity = -transform.up * speed;
+        if (!shotDown)
+            rb.velocity = transform.right * speed;
+        else
+            rb.velocity = -transform.up * speed;
 
         isGravityOn = false;
 
@@ -51,16 +52,16 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-       /* if (!hasHitGround)
-        {
-            //attackDetails.position = transform.position;
+        /* if (!hasHitGround)
+         {
+             //attackDetails.position = transform.position;
 
-          *//*  if (isGravityOn)
-            {
-                float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            }*//*
-        }*/
+           *//*  if (isGravityOn)
+             {
+                 float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+                 transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+             }*//*
+         }*/
     }
 
     private void FixedUpdate()
@@ -72,20 +73,22 @@ public class Projectile : MonoBehaviour
 
             if (damageHit)
             {
-              
+
                 IDamageable damageable = damageHit.GetComponent<IDamageable>();
                 if (damageable != null)
                 {
                     damageable.Damage(bulletDamage);
                 }
-                Destroy(gameObject);
+                //Destroy(gameObject);
+                ObjectPool.EnqueueObject(this, "bullet");
             }
 
             if (groundHit)
             {
                 hasHitGround = true;
-                Destroy(gameObject);
-                SplitBullet();
+                //Destroy(gameObject);
+                ObjectPool.EnqueueObject(this, "bullet");
+              //  SplitBullet();
                 rb.gravityScale = 0f;
                 rb.velocity = Vector2.zero;
             }
@@ -105,7 +108,7 @@ public class Projectile : MonoBehaviour
         this.travelDistance = travelDistance;
         this.bulletDamage = bulletDamage;
     }
-    void SplitBullet()
+    private void SplitBullet()
     {
         // Spawn the first part of the bullet
         GameObject part1 = Instantiate(bulletPart1, transform.position, transform.rotation);

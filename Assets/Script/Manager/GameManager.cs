@@ -9,6 +9,8 @@ public class GameManager : Singleton<GameManager>
     private int totalFruits; // Total fruits in the level
     private int fruitsCollected = 0; // Fruits collected by the player
 
+    public Projectile projectile;
+
     public event Action OnWin;
     public override void Awake()
     {
@@ -25,6 +27,7 @@ public class GameManager : Singleton<GameManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Reset the collected fruits for the new scene
+        if(scene.buildIndex == 14) SetUpPool();
         ResetFruits();
     }
     // Initialize the game level
@@ -58,6 +61,10 @@ public class GameManager : Singleton<GameManager>
                 Invoke(nameof(winGame), 0.5f);
             }
         }
+    }
+    private void SetUpPool()
+    {
+        ObjectPool.SetupPool(projectile, 10, "bullet");
     }
     private void winGame()
     {
