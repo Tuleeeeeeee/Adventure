@@ -1,7 +1,5 @@
 # 🎮 Simple 2D Platformer in Unity  
 
-[![Gameplay Demo](Image/Demo.gif)](Image/Demo.gif)  
-
 ## 📌 Giới thiệu  
 **Simple 2D Platformer** là một game platformer 2D đơn giản, được phát triển bằng **Unity** và **C#**. Game sử dụng **State Machine** để quản lý AI của enemy, giúp tạo ra hành vi linh hoạt và thông minh hơn.  
 
