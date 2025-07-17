@@ -4,25 +4,25 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Audio
+  - Fruit
   - Enemy
   - Trap
-  - Fruit
+  - Platform
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - 
   - Water
   - UI
+  - Player
   - Ground
-  - Platform
+  - Wall
   - Enemy
-  - Object
   - 
-  - 
-  - 
-  - 
+  - Platform
+  - Hazzard
+  - Collectible
   - 
   - 
   - 
@@ -47,6 +47,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 3993515213
+    locked: 0
+  - name: Instance
+    uniqueID: 6956609
     locked: 0
   - name: Enemy
     uniqueID: 379233987

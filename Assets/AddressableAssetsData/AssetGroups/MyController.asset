@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 805034d72fba82547ac36f4e8b4a727f
-  m_SerializeEntries:
-  - m_GUID: d9f89216485433e49992607f5b042739
-    m_Address: Assets/Items/Fruits/Collected.controller
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a1f7ffc5bdacf7498f17f7b802fef89, type: 2}
   m_SchemaSet:

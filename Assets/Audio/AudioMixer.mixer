@@ -36,7 +36,9 @@ AudioMixerController:
   m_UpdateMode: 0
   m_ExposedParameters:
   - guid: aa559adb9ddccc0408cc24dbbc2a62a8
-    name: music
+    name: Music
+  - guid: 480eae35b38489f4f8abe31388965793
+    name: SFX
   m_AudioMixerGroupViews:
   - guids:
     - 3657f24fc96a9ca4cb62eef1fd433a65
@@ -122,6 +124,48 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &5291271497887499464
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: fd69bbb27a8349b41ba54c783f55386d
+  m_EffectName: SFX Reverb
+  m_MixLevel: 61906d590df15614e8025c70816c9591
+  m_Parameters:
+  - m_ParameterName: Dry Level
+    m_GUID: 3046aaa91861b9b469a00839f5b505b6
+  - m_ParameterName: Room
+    m_GUID: ff8dba7997497964b9d63ec63935f207
+  - m_ParameterName: Room HF
+    m_GUID: 786005e0d990c2b40ab55967e9984850
+  - m_ParameterName: Decay Time
+    m_GUID: 4d46cf7029a4b0145818ca06f27287b9
+  - m_ParameterName: Decay HF Ratio
+    m_GUID: ce3fbbd5a155d0041bfd67368d966e9b
+  - m_ParameterName: Reflections
+    m_GUID: 329d0792e4ba75742a5e7cd202d419bd
+  - m_ParameterName: Reflect Delay
+    m_GUID: a5fa3702677b30c4392849061954d4e5
+  - m_ParameterName: Reverb
+    m_GUID: abacd53b12ceec341bf035a9a371277f
+  - m_ParameterName: Reverb Delay
+    m_GUID: 2d5f22c82f076734aacc2ccd86d8306b
+  - m_ParameterName: Diffusion
+    m_GUID: 84046aa7a0c66d442a76b4661f470368
+  - m_ParameterName: Density
+    m_GUID: 9101589337544674e912657567c87b36
+  - m_ParameterName: HF Reference
+    m_GUID: 9f61229715282324fa1418c6cba47e32
+  - m_ParameterName: Room LF
+    m_GUID: 87ed1a4f32a34b9498075ce6e6edee1c
+  - m_ParameterName: LF Reference
+    m_GUID: 00eb69e5b87f5f44f80134acdceb6720
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!243 &6671771612347692384
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -137,6 +181,7 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 2654386061897149248}
+  - {fileID: 5291271497887499464}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
