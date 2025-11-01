@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2065289669201468174, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: gameStateChangeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: fb9bcde5f42f31345842c94d0c438e42, type: 2}
     - target: {fileID: 4338576423310562082, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
       propertyPath: m_Controller
       value: 
@@ -71,6 +75,26 @@ PrefabInstance:
     - target: {fileID: 4338576423310562086, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116688696029865556, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116688696029865556, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionId
+      value: 1ecad500-46a3-490d-9ce2-665f5a4a3dc9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116688696029865556, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionId
+      value: 1a502eb9-eb7c-4c88-860c-87be91f04c83
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116688696029865556, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionName
+      value: UI/Pause[/Keyboard/escape]
+      objectReference: {fileID: 0}
+    - target: {fileID: 5116688696029865556, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionName
+      value: UI/Restart
       objectReference: {fileID: 0}
     - target: {fileID: 5383821703610723775, guid: 18d643356e656e54ea4b492868aa5d2c, type: 3}
       propertyPath: m_IsTrigger

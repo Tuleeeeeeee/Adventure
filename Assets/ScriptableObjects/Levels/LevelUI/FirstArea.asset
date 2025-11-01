@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21d12b23a3ca5f40aac43d0adf84657, type: 3}
+  m_Name: FirstArea
+  m_EditorClassIdentifier: 
+  AreaID: Tutorial
+  AreaName: Tutorial Area
+  Levels:
+  - {fileID: 11400000, guid: 2f5fedd0b0f54c640a61e7507c3a5903, type: 2}
+  - {fileID: 11400000, guid: 2fd89d678a9ab094baae5c0f8cbb3c46, type: 2}
+  - {fileID: 11400000, guid: 8aa786e4355b3b44db0d82c42b4e359f, type: 2}
+  - {fileID: 11400000, guid: dcb7203135a5fd04b9e17c5c66b163d3, type: 2}
+  - {fileID: 11400000, guid: a2cbc5661c320ea41a841e05a36f6846, type: 2}
+  - {fileID: 11400000, guid: 55813ea1b8110be439e735947b8bd524, type: 2}
+  - {fileID: 11400000, guid: d3db7cd50d228a14ba663bde5c3dbabe, type: 2}
+  - {fileID: 11400000, guid: b015628e3b591674fb9e0d9d31e364c3, type: 2}
+  - {fileID: 11400000, guid: 96214e534f0425c44ba73c7fa45afa21, type: 2}
+  - {fileID: 11400000, guid: d63f6b1cc343fe84aa7bd6337c7451f2, type: 2}

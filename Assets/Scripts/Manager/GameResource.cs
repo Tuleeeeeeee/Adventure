@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Resources/Game Resources")]
 public class GameResources : ScriptableObject
@@ -25,5 +26,15 @@ public class GameResources : ScriptableObject
     #endregion
     public CurrentPlayerSO currentPlayerSO;
     public List<PlayerDetailsSO> playerDetailsList;
+
+    #region Header MUSIC
+    [Space(10)]
+    [Header("MUSIC")]
+    #endregion
+    public AudioMixerGroup musicMasterMixerGroup;
+    public MusicTrackSO mainMenuMusic;
+    public AudioMixerSnapshot musicOnFullSnapshot;
+    public AudioMixerSnapshot musicLowSnapshot;
+    public AudioMixerSnapshot musicOffSnapshot;
 }
 

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class ShowFPS : MonoBehaviour
 {
+    [SerializeField] private TextAnchor textAnchor;
     public Text fpsText; // Optional, if you want to display FPS with a UI Text element
     private float deltaTime = 0.0f;
 
@@ -27,8 +28,8 @@ public class ShowFPS : MonoBehaviour
         int w = Screen.width, h = Screen.height;
         GUIStyle style = new GUIStyle();
 
-        Rect rect = new Rect(0, 0, w, h * 2 / 100);
-        style.alignment = TextAnchor.UpperLeft;
+        Rect rect = new Rect(0, 0, w, h * 2 / 100F);
+        style.alignment = textAnchor;
         style.fontSize = h * 2 / 100;
         style.normal.textColor = Color.white;
         string text = string.Format("{0:0.} FPS", fps);

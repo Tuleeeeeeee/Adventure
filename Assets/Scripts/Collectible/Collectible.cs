@@ -30,8 +30,6 @@ public abstract class Collectible : MonoBehaviour, ICollectible
         OnCollected(other.gameObject);
         DisableCollider();
         RaiseCollectibleEvent();
-
-        //Destroy(gameObject); // or pool
     }
 
     public abstract void OnCollected(GameObject collector);
@@ -40,8 +38,9 @@ public abstract class Collectible : MonoBehaviour, ICollectible
     {
         collectibleEventSO?.RaiseEvent(new CollectibleEventArgs(collectibleType, value));
     }
+
     protected virtual void AnimationFinishedTrigger()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

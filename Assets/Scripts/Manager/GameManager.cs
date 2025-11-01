@@ -1,58 +1,87 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using Tuleeeeee.Enums;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 namespace Tuleeeeee.Manager
 {
     public class GameManager : SingletonMonoBehaviour<GameManager>
     {
-        public event Action OnWin;
-        [SerializeField] private CollectibleEventSO collectibleEventSO;
+        [Foldout("Events")][SerializeField] private CollectibleEventSO collectibleEventSO;
+        [Foldout("Events")][SerializeField] private GameEventSO nextLevelEvent;
+        [Foldout("Events")][SerializeField] private GameEventSO prevLevelEvent;
+        [Foldout("Events")][SerializeField] private GameEventSO restartEvent;
+        [Foldout("Events")][SerializeField] private IntIntGameEventSO levelChangedEvent;
+        [Foldout("Events")][SerializeField] private FloatGameEvent levelCompleteEvent;
+        [Foldout("Events")][SerializeField] private FloatGameEvent levelWonEvent;
+        [Foldout("Events")][SerializeField] private FloatGameEvent timeChangeEvent;
+        [Foldout("Events")][SerializeField] private IntGameEventSO selectedLevelEvent;
+        [Foldout("Events")][SerializeField] private GameStateGameEventSO gameStateChangeEvent;
 
         #region  Tooltip
-        [Tooltip("Populate with the dungeon level sciptable objects")]
+        [Tooltip("Populate with the level sciptable objects")]
         #endregion Tooltip
         [SerializeField] private List<LevelSO> levelList;
+
         #region Tooltip
-        [Tooltip("Populate with starting the dungeon level for testing, first level =0")]
+        [Tooltip("Populate level for testing, first level =0")]
         #endregion Tooltip
         [SerializeField] private int currentLevelListIndex;
+
+        #region Tooltip
+        [Tooltip("Populate level Builder")]
+        #endregion Tooltip        
+        [SerializeField] private LevelBuilder levelBuilder;
+
+        #region Tooltip
+        [Tooltip("Populate loading screen")]
+        #endregion Tooltip
+        [SerializeField] private LoadingScreen loadingScreen;
+
         private LevelSO currentLevel;
-        private LevelSO previousLevel;
+
         private GameObject currentLevelInstance;
 
-        private GameState gameState;
+        private GameState currentGameState;
         private GameState previousGameState;
 
         private PlayerDetailsSO playerDetails;
         private Player player;
+
         private int totalFruits;
         private int fruitsCollected = 0;
-        private GameObject[] cachedFruits;
+
+        private float elapsedTime;
+        private bool isRunning;
 
         private void OnEnable()
         {
-            collectibleEventSO.OnCollectibleCollected.AddListener(HandleFruitCollected);
+            collectibleEventSO.OnCollectibleCollected.AddListener(OnFruitCollected);
+            nextLevelEvent.RegisterListener(OnLoadNextLevel);
+            prevLevelEvent.RegisterListener(OnLoadPreviousLevel);
+            restartEvent.RegisterListener(OnRestartLevel);
+            selectedLevelEvent.RegisterListener(LoadLevelByIndex);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
-            collectibleEventSO.OnCollectibleCollected.RemoveListener(HandleFruitCollected);
+            collectibleEventSO.OnCollectibleCollected.RemoveListener(OnFruitCollected);
+            nextLevelEvent.UnregisterListener(OnLoadNextLevel);
+            prevLevelEvent.UnregisterListener(OnLoadPreviousLevel);
+            restartEvent.UnregisterListener(OnRestartLevel);
+            selectedLevelEvent.UnregisterListener(LoadLevelByIndex);
         }
+
         public override void Init()
         {
             playerDetails = GameResources.Instance.currentPlayerSO.playerDetails;
-            InstantiatePlayer();
+            InitializePlayer();
         }
-        private void InstantiatePlayer()
-        {
-            GameObject playerGameObject = Instantiate(playerDetails.playerPrefab);
 
-            player = playerGameObject.GetComponent<Player>();
+        private void InitializePlayer()
+        {
+            player = Instantiate(playerDetails.playerPrefab).GetComponent<Player>();
 
             player.Initialize(playerDetails);
         }
@@ -60,127 +89,176 @@ namespace Tuleeeeee.Manager
         private void Start()
         {
             previousGameState = GameState.GameStart;
-            gameState = GameState.GameStart;
-
+            currentGameState = GameState.GameStart;
             currentLevel = levelList[currentLevelListIndex];
-            previousLevel = levelList[currentLevelListIndex];
+
+            levelChangedEvent.Raise((currentLevelListIndex, levelList.Count - 1));
         }
 
         private void Update()
         {
-            switch (gameState)
+            switch (currentGameState)
             {
                 case GameState.GameStart:
                     InitializeLevel(currentLevelListIndex);
+                    loadingScreen.HideLoading();
+                    StartLevel();
                     ChangeState(GameState.Playing);
                     break;
                 case GameState.Playing:
                     break;
                 case GameState.LevelCompleted:
-                    StartCoroutine(LevelCompleted());
+                    break;
+                case GameState.Restart:
                     break;
                 case GameState.Paused:
                     break;
                 case GameState.GameOver:
                     break;
                 case GameState.GameWon:
-                    StartCoroutine(GameWon());
                     break;
             }
         }
 
-        private void InitializeLevel(int currentLevelListIndex)
+        private void OnFruitCollected(CollectibleEventArgs args)
         {
-            if (currentLevelListIndex < 0 || currentLevelListIndex >= levelList.Count)
+            if (args.collectibleType == CollectibleType.Fruit)
             {
+                fruitsCollected++;
+
+                if (fruitsCollected >= totalFruits)
+                {
+                    float elapsedTime = GetElapsedTime();
+                    isRunning = false;
+                    if (currentLevelListIndex >= levelList.Count - 1)
+                    {
+                        levelWonEvent.Raise(elapsedTime);
+                        ChangeState(GameState.GameWon);
+                    }
+                    else
+                    {
+                        levelCompleteEvent.Raise(elapsedTime);
+                        ChangeState(GameState.LevelCompleted);
+                    }
+                }
+            }
+        }
+
+        private void InitializeLevel(int levelIndex)
+        {
+            if (levelIndex < 0 || levelIndex >= levelList.Count)
+            {
+#if UNITY_EDITOR
                 Debug.LogError("Invalid level index!");
+#endif
                 return;
             }
 
-            currentLevelInstance = Instantiate(currentLevel.levelPrefab);
+            currentLevel = levelList[levelIndex];
 
+            levelChangedEvent.Raise((currentLevelListIndex, levelList.Count - 1));
+
+            levelBuilder.LoadLevel(currentLevel);
+
+            SetPlayerPosition(currentLevel);
+
+            GameObject currentLevelInstance = levelBuilder.CurrentLevelInstance;
+
+            SetCameraSize(currentLevelInstance);
+
+            totalFruits = levelBuilder.Fruits.Count;
+            fruitsCollected = 0;
+        }
+
+        public void OnLoadNextLevel()
+        {
+            if (currentLevelListIndex + 1 >= levelList.Count) return;
+            using (new LoadingScope(loadingScreen))
+            {
+                currentLevelListIndex++;
+                InitializeLevel(currentLevelListIndex);
+                ChangeState(GameState.Playing);
+            }
+            StartLevel();
+        }
+
+        public void OnLoadPreviousLevel()
+        {
+            if (currentLevelListIndex - 1 < 0) return;
+
+            using (new LoadingScope(loadingScreen))
+            {
+                currentLevelListIndex--;
+                InitializeLevel(currentLevelListIndex);
+                ChangeState(GameState.Playing);
+            }
+            StartLevel();
+        }
+
+        public void OnRestartLevel()
+        {
+            using (new LoadingScope(loadingScreen))
+            {
+                levelBuilder.ResetFruits();
+                InitializeLevel(currentLevelListIndex);
+                ChangeState(GameState.Playing);
+            }
+            StartLevel();
+        }
+
+        public void LoadLevelByIndex(int levelIndex)
+        {
+            if (levelIndex < 0 || levelIndex >= levelList.Count)
+            {
+#if UNITY_EDITOR
+                Debug.LogError($"❌ Invalid level index: {levelIndex}");
+#endif
+                return;
+            }
+
+            using (new LoadingScope(loadingScreen))
+            {
+                currentLevelListIndex = levelIndex;
+                InitializeLevel(currentLevelListIndex);
+                ChangeState(GameState.Playing);
+            }
+
+            StartLevel();
+        }
+
+        public void StartLevel()
+        {
+            elapsedTime = 0f;
+            isRunning = true;
+            FunctionUpdater.StopUpdaterWithName("LevelTimer");
+            FunctionUpdater.Create(() =>
+            {
+                if (!isRunning) return true; // stop updater
+                elapsedTime += Time.deltaTime;
+                timeChangeEvent.Raise(elapsedTime);
+                return false;
+            }, "LevelTimer");
+        }
+
+        public float GetElapsedTime()
+        {
+            return elapsedTime;
+        }
+
+        private void SetPlayerPosition(LevelSO currentLevel)
+        {
+            player.transform.position = currentLevel.playerSpawnPosition;
+            player.ResetTrail();
+            player.StateManager.ChangeState(player.AppearState);
+        }
+
+        private void SetCameraSize(GameObject currentLevelInstance)
+        {
             Tilemap tilemap = currentLevelInstance.GetComponentInChildren<Tilemap>();
             if (tilemap != null)
             {
-                // Get local bounds and convert to world bounds
                 Bounds bounds = tilemap.localBounds;
                 FitCameraToBounds(bounds, currentLevelInstance.transform);
-            }
-
-            // Move player to spawn position
-            Vector3 playerPosition = currentLevel.playerSpawnPosition;
-            player.transform.position = playerPosition;
-
-
-            SpawnFruits(currentLevel);
-            SpawnTraps(currentLevel);
-
-        }
-
-        private void SpawnFruits(LevelSO currentLevel)
-        {
-            List<GameObject> newFruits = new List<GameObject>();
-            foreach (var group in currentLevel.collectiblesListToSpawn)
-            {
-                foreach (var pos in group.spawnPositions)
-                {
-                    Vector3 centerPos = pos + new Vector3(0f, 0.5f, 0f);
-                    GameObject collectible = Instantiate(group.collectiblePrefab, centerPos, Quaternion.identity);
-                    newFruits.Add(collectible);
-                }
-            }
-
-            cachedFruits = newFruits.ToArray();
-            totalFruits = cachedFruits.Length;
-            fruitsCollected = 0;
-        }
-        private void SpawnTraps(LevelSO currentLevel)
-        {
-            foreach (var group in currentLevel.trapListToSpawn)
-            {
-                foreach (var pos in group.spawnPositions)
-                {
-                    Vector3 centerPos = pos + new Vector3(0.5f, 0.5f, 0f);
-                    Instantiate(group.trapPrefab, pos, Quaternion.identity);
-                }
-            }
-        }
-        private IEnumerator LevelCompleted()
-        {
-            ChangeState(GameState.Playing);
-
-            yield return new WaitForSeconds(2f);
-
-            //    yield return StartCoroutine(Fade(0f, 1f, 2f, new Color(0f, 0f, 0f, 0.4f)));
-
-            // Check if there are more levels
-            currentLevelListIndex++;
-
-            if (currentLevelListIndex > levelList.Count - 1)
-            {
-                Debug.Log("🎉 All levels completed!");
-                ChangeState(GameState.GameWon);
-                yield break;
-            }
-
-            ChangeLevel(levelList[currentLevelListIndex]);
-
-            ClearLevel();
-
-            InitializeLevel(currentLevelListIndex);
-        }
-        private IEnumerator GameWon()
-        {
-            Debug.Log("🎉 Game Won!");
-            yield return new WaitForSeconds(2f);
-        }
-
-        public void ClearLevel()
-        {
-            if (currentLevelInstance != null)
-            {
-                Destroy(currentLevelInstance);
-                currentLevelInstance = null;
             }
         }
 
@@ -203,30 +281,14 @@ namespace Tuleeeeee.Manager
             Debug.Log($"📷 Camera adjusted to level bounds: size={cam.orthographicSize}, center={center}");
         }
 
-        private void HandleFruitCollected(CollectibleEventArgs args)
+        public void ChangeState(GameState newState)
         {
-            if (args.collectibleType == CollectibleType.Fruit)
+            if (newState != currentGameState)
             {
-                Debug.Log($"Fruit collected! Type: {args.collectibleType}, Value: {args.value}");
-                fruitsCollected++;
-
-                if (fruitsCollected >= totalFruits)
-                {
-                    Debug.Log("All fruits collected! Level completed.");
-                    OnWin?.Invoke();
-                    ChangeState(GameState.LevelCompleted);
-                }
+                previousGameState = currentGameState;
+                currentGameState = newState;
+                gameStateChangeEvent.Raise(currentGameState);
             }
-        }
-        private void ChangeLevel(LevelSO newlevel)
-        {
-            previousLevel = currentLevel;
-            currentLevel = newlevel;
-        }
-        private void ChangeState(GameState newState)
-        {
-            previousGameState = gameState;
-            gameState = newState;
         }
     }
 }

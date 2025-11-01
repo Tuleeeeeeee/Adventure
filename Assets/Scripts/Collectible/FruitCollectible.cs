@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class FruitCollectible : Collectible
 {
     private Animator anim;

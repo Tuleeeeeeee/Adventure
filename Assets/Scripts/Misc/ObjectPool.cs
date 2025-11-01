@@ -5,6 +5,7 @@ public static class ObjectPool
 {
     public static Dictionary<string, Component> poolLookup = new Dictionary<string, Component>();
     public static Dictionary<string, Queue<Component>> poolDictionary = new Dictionary<string, Queue<Component>>();
+    
     public static void EnqueueObject<T>(T item, string name) where T : Component
     {
         if (!item.gameObject.activeSelf) { return; }

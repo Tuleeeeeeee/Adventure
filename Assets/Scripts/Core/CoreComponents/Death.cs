@@ -23,7 +23,6 @@ namespace Tuleeeeee.CoreComponets
         public void Die()
         {
             _animator.SetBool("hit", true);
-            TimeManager.HitStop(this, 0.2f);
         }
     }
 }

@@ -15,3 +15,8 @@ MonoBehaviour:
   currentPlayerSO: {fileID: 11400000, guid: 7af9b64b4f6b2c34a8e979156aed610b, type: 2}
   playerDetailsList:
   - {fileID: 11400000, guid: 42c174a44e79e3745bbe9c6ce44a0de9, type: 2}
+  musicMasterMixerGroup: {fileID: 24300002, guid: bf4a87e2c3a2408438d1955b7fd9fb80, type: 2}
+  mainMenuMusic: {fileID: 0}
+  musicOnFullSnapshot: {fileID: 24500006, guid: bf4a87e2c3a2408438d1955b7fd9fb80, type: 2}
+  musicLowSnapshot: {fileID: 24500006, guid: bf4a87e2c3a2408438d1955b7fd9fb80, type: 2}
+  musicOffSnapshot: {fileID: 24500006, guid: bf4a87e2c3a2408438d1955b7fd9fb80, type: 2}

@@ -12,13 +12,14 @@ GameObject:
   - component: {fileID: 9045007084875179654}
   - component: {fileID: 5584035679979248839}
   - component: {fileID: 1202975778094207469}
-  m_Layer: 0
+  - component: {fileID: 5726823075083564790}
+  m_Layer: 13
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5083691421525968674
 Transform:
   m_ObjectHideFlags: 0
@@ -142,3 +143,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.45
+--- !u!114 &5726823075083564790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7114009447866086527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674f2e8b6124ce043beaf4bbb75f8a34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectibleEventSO: {fileID: 11400000, guid: fe347132f70690f40a92b6d59efa30d1, type: 2}
+  collectibleType: 1
+  value: 1
+  boostForce: 50

@@ -189,6 +189,6 @@ public class MovingPlatform : MonoBehaviour
                 }
                 break;
         }
-#endif
     }
+#endif
 }

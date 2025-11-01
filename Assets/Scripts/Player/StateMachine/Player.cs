@@ -1,7 +1,7 @@
 using Tuleeeeee.Cores;
 using Tuleeeeee.CoreComponets;
 using UnityEngine;
-using System;
+using Tuleeeeee.Enums;
 
 public class Player : MonoBehaviour
 {
@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public PlayerInAirState InAirState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
+    public PlayerAppearState AppearState { get; private set; }
+    public PlayerDisappearState DisappearState { get; private set; }
     #endregion
 
     [SerializeField] private PlayerData playerData;
@@ -32,26 +34,33 @@ public class Player : MonoBehaviour
     public Animator Animator { get; private set; }
     public PlayerInputHandler InputHandler { get; private set; }
     public BoxCollider2D BoxCollider2D { get; private set; }
+    public TrailRenderer TrailRenderer { get; private set; }
     #endregion
 
     public HealthEvent HealthEvent { get; private set; }
-
+    [SerializeField] private GameStateGameEventSO gameStateChangeEvent;
     // Platform interaction
     private Rigidbody2D currentPlatformRBody;
     private Vector2 lastPlatformPosition;
     private bool isOnPlatform;
 
-    private Vector3 originalScale;
+    private bool controlsEnabled = true;
+
 
     #region UNITY METHODS
     void OnEnable()
     {
         HealthEvent.OnHealthChanged += HealthEvent_OnHealthChanged;
+        gameStateChangeEvent.RegisterListener(OnGameStateChanged);
     }
+
     void OnDisable()
     {
         HealthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
+        gameStateChangeEvent.UnregisterListener(OnGameStateChanged);
     }
+
+
 
     private void Awake()
     {
@@ -59,6 +68,7 @@ public class Player : MonoBehaviour
         Animator = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
         BoxCollider2D = GetComponentInChildren<BoxCollider2D>();
+        TrailRenderer = GetComponentInChildren<TrailRenderer>();
         StateManager = new StateManager();
 
         HealthEvent = GetComponentInChildren<HealthEvent>();
@@ -68,18 +78,19 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        Health.SetStartingHealth(100);
         StateManager.Initialize(IdleState);
     }
 
     private void Update()
     {
+        if (!controlsEnabled) return;
         Core.LogicUpdate();
         StateManager.CurrentPlayerState.LogicUpdate();
     }
 
     private void FixedUpdate()
     {
+        if (!controlsEnabled) return;
         StateManager.CurrentPlayerState.PhysicUpdate();
 
         CheckIfOnPlatform();
@@ -93,6 +104,36 @@ public class Player : MonoBehaviour
     }
     #endregion
 
+    #region FUNCTIONALITY
+
+    private void SetControlsEnabled(bool enabled)
+    {
+        InputHandler.enabled = enabled;
+        controlsEnabled = enabled;
+        Movement.enabled = enabled;
+        Animator.enabled = enabled;
+    }
+
+    public void EnableControls()
+    {
+        SetControlsEnabled(true);
+        Movement.Unfreeze();
+    }
+
+    public void DisableControls()
+    {
+        SetControlsEnabled(false);
+        Movement.Freeze();
+    }
+
+    public void ResetTrail()
+    {
+        TrailRenderer.Clear();
+    }
+
+
+    #endregion
+
     #region EVENTS
     private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
     {
@@ -102,12 +143,28 @@ public class Player : MonoBehaviour
             //destroyedEvent.CallDestroyedEvent(true, 0);
         }
     }
+
+    private void OnGameStateChanged(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.Playing:
+                EnableControls();
+                break;
+            case GameState.Paused:
+            case GameState.LevelCompleted:
+            case GameState.GameWon:
+                DisableControls();
+                break;
+
+        }
+    }
     #endregion
 
     #region INITIALIZATION
     public void Initialize(PlayerDetailsSO playerDetails)
     {
-
+        Health.SetStartingHealth(playerDetails.playerHealthAmount);
     }
     #endregion
 
@@ -156,6 +213,8 @@ public class Player : MonoBehaviour
         InAirState = new PlayerInAirState(this, StateManager, playerData, "in_air");
         WallSlideState = new PlayerWallSlideState(this, StateManager, playerData, "wall_slide");
         WallJumpState = new PlayerWallJumpState(this, StateManager, playerData, "wall_jump");
+        AppearState = new PlayerAppearState(this, StateManager, playerData, "appear");
+        DisappearState = new PlayerDisappearState(this, StateManager, playerData, "disappear");
     }
 
     #endregion

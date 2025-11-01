@@ -6,6 +6,7 @@ namespace Tuleeeeee.Enums
         GameStart,
         Playing,
         LevelCompleted,
+        Restart,
         Paused,
         GameOver,
         GameWon

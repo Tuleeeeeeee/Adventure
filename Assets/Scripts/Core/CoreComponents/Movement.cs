@@ -5,20 +5,21 @@ namespace Tuleeeeee.CoreComponets
 {
     public class Movement : CoreComponent
     {
+        #region COMPONENTS
         public Rigidbody2D Rb { get; private set; }
+        #endregion
 
+        #region PROPERTIES
         public int FacingDirection { get; private set; }
-
         public Vector2 CurrentVelocity { get; private set; }
-
         private Vector2 workspace;
+        #endregion
 
+        #region UNITY METHODS
         protected override void Awake()
         {
             base.Awake();
-
             Rb = GetComponentInParent<Rigidbody2D>();
-
             FacingDirection = 1;
         }
 
@@ -26,8 +27,9 @@ namespace Tuleeeeee.CoreComponets
         {
             CurrentVelocity = Rb.velocity;
         }
+        #endregion
 
-        #region Set Functions
+        #region VELOCITY METHODS
         public void ApplyPositionOffset(Vector2 direction)
         {
             workspace += direction;
@@ -69,12 +71,26 @@ namespace Tuleeeeee.CoreComponets
             Rb.velocity = workspace;
             CurrentVelocity = workspace;
         }
+        #endregion
 
+        #region GRAVITY & FREEZE
         public void SetGravityScale(float value)
         {
             Rb.gravityScale = value;
         }
 
+        public void Freeze()
+        {
+            Rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        }
+
+        public void Unfreeze()
+        {
+            Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+        #endregion
+
+        #region FLIP LOGIC
         public void CheckIfShouldFlip(int xInput)
         {
             if (xInput != 0 && xInput != FacingDirection)
@@ -90,7 +106,6 @@ namespace Tuleeeeee.CoreComponets
             localScale.x *= -1f;
             Rb.transform.localScale = localScale;
         }
-
         #endregion
     }
 }

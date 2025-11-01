@@ -18,27 +18,27 @@ MonoBehaviour:
   collectiblesListToSpawn:
   - collectiblePrefab: {fileID: 8479306098649584312, guid: e767e776d08fae44582dee0b2104be3b, type: 3}
     spawnPositions:
-    - {x: 4, y: 5, z: 0}
-    - {x: 4, y: 6, z: 0}
-    - {x: 4, y: 7, z: 0}
-    - {x: 4, y: 8, z: 0}
-    - {x: 4, y: 9, z: 0}
+    - {x: 4, y: 5.5, z: 0}
+    - {x: 4, y: 6.5, z: 0}
+    - {x: 4, y: 7.5, z: 0}
+    - {x: 4, y: 8.5, z: 0}
+    - {x: 4, y: 9.5, z: 0}
   - collectiblePrefab: {fileID: 59684081021948936, guid: 523887b024195ef4bb38325e1b2f9986, type: 3}
     spawnPositions:
-    - {x: 15, y: 7, z: 0}
-    - {x: 15, y: 8, z: 0}
-    - {x: 15, y: 9, z: 0}
-    - {x: 15, y: 10, z: 0}
-    - {x: 15, y: 11, z: 0}
-    - {x: 15, y: 12, z: 0}
-    - {x: 15, y: 13, z: 0}
-    - {x: 15, y: 14, z: 0}
-    - {x: 15, y: 15, z: 0}
+    - {x: 15, y: 7.5, z: 0}
+    - {x: 15, y: 8.5, z: 0}
+    - {x: 15, y: 9.5, z: 0}
+    - {x: 15, y: 10.5, z: 0}
+    - {x: 15, y: 11.5, z: 0}
+    - {x: 15, y: 12.5, z: 0}
+    - {x: 15, y: 13.5, z: 0}
+    - {x: 15, y: 14.5, z: 0}
+    - {x: 15, y: 15.5, z: 0}
   - collectiblePrefab: {fileID: 1265840457831184057, guid: 41b3707d63162ac418d24424145e82b1, type: 3}
     spawnPositions:
-    - {x: 21, y: 15, z: 0}
-    - {x: 22, y: 15, z: 0}
-    - {x: 23, y: 15, z: 0}
+    - {x: 21.5, y: 15.5, z: 0}
+    - {x: 22.5, y: 15.5, z: 0}
+    - {x: 23.5, y: 15.5, z: 0}
   trapListToSpawn:
   - trapPrefab: {fileID: 6435426285243504843, guid: 0164b458e0abb0c4593277b867ff04d4, type: 3}
     spawnPositions:
