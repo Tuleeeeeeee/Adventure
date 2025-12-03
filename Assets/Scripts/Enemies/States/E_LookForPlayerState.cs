@@ -35,7 +35,7 @@ public class E_LookForPlayerState : EnemiesState
         lastTurnTime = StartTime;
         amountOfTurnsDone = 0;
 
-        Movement.SetVelocityX(0f);
+        Movement.SetVelocityZero();
     }
     public override void LogicUpdate()
     {

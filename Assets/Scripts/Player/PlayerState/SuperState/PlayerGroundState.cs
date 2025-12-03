@@ -1,10 +1,9 @@
-using Tuleeeeee.CoreComponets;
 
 public class PlayerGroundState : PlayerState
 {
     protected int XInput;
-    private bool jumpInput;
-    private bool isGrounded;
+    private bool _jumpInput;
+    private bool _isGrounded;
 
     public PlayerGroundState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName) :
         base(player, stateManager, playerData, animBoolName)
@@ -13,30 +12,30 @@ public class PlayerGroundState : PlayerState
     public override void DoCheck()
     {
         base.DoCheck();
-        isGrounded = player.CollisionSenses.Ground;
+        _isGrounded = Player.CollisionSenses.Ground;
     }
 
     public override void Enter()
     {
         base.Enter();
 
-        player.JumpState.ResetAmountOfJumpsLeft();
+        Player.JumpState.ResetAmountOfJumpsLeft();
     }
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        XInput = player.InputHandler.NormInputX;
-        jumpInput = player.InputHandler.JumpInput;
+        XInput = Player.InputHandler.NormInputX;
+        _jumpInput = Player.InputHandler.JumpInput;
 
-        if (jumpInput && player.JumpState.CanJump())
+        if (_jumpInput && Player.JumpState.CanJump())
         {
-            stateManager.ChangeState(player.JumpState);
+            StateManager.ChangeState(Player.JumpState);
         }
-        else if (!isGrounded)
+        else if (!_isGrounded)
         {
-            player.InAirState.StartCoyoteTime();
-            stateManager.ChangeState(player.InAirState);
+            Player.InAirState.StartCoyoteTime();
+            StateManager.ChangeState(Player.InAirState);
         }
     }
     

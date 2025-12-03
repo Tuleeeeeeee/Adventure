@@ -14,14 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementVelocity: 10
   amountOfJumps: 1
-  jumpHeight: 25
+  jumpHeight: 20
   gravityScale: 3
   coyoteTime: 0.2
   variableJumpHeightMultiplier: 0.5
-  platformCheckDistance: 2
-  whatIsPlatfrom:
-    serializedVersion: 2
-    m_Bits: 2048
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 512
@@ -29,3 +25,10 @@ MonoBehaviour:
   wallJumpVelocity: 25
   wallJumpTime: 0.2
   wallJumpAngle: {x: 1, y: 2}
+  groundingForce: -2
+  acceleration: 120
+  groundDeceleration: 60
+  airDeceleration: 30
+  maxFallSpeed: 30
+  fallAcceleration: 40
+  jumpEndEarlyGravityModifier: 2.5

@@ -37,7 +37,7 @@ public class E_ChargeState : EnemiesState
         base.Enter();
 
         isChargeTimeOver = false;
-        Movement.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
+      //  Movement.SetVelocityX(stateData.chargeSpeed * Movement.FacingDirection);
     }
 
     public override void LogicUpdate()

@@ -23,7 +23,7 @@ public class E_AttackState : EnemiesState
         base.Enter();
 
         IsAnimationFinished = false;
-        Movement.SetVelocityX(0f);
+      //  Movement.SetVelocityX(0f);
     }
 
 }

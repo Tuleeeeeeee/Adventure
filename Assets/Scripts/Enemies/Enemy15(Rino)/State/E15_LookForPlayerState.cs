@@ -12,7 +12,7 @@ public class E15_LookForPlayerState : E_LookForPlayerState
     {
         base.AnimationTrigger();
         Entity.Rb.drag = 5;
-        Movement.SetVelocityX(5f * -Movement.FacingDirection);
+      //  Movement.SetVelocityX(5f * -Movement.FacingDirection);
         Movement.SetVelocityY(5f);
     }
 

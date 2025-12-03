@@ -6,16 +6,20 @@ namespace Tuleeeeee.CoreComponets
     public class Movement : CoreComponent
     {
         #region COMPONENTS
+
         public Rigidbody2D Rb { get; private set; }
+
         #endregion
 
         #region PROPERTIES
+
         public int FacingDirection { get; private set; }
         public Vector2 CurrentVelocity { get; private set; }
-        private Vector2 workspace;
+        private Vector2 _workspace;
         #endregion
 
         #region UNITY METHODS
+
         protected override void Awake()
         {
             base.Awake();
@@ -27,14 +31,35 @@ namespace Tuleeeeee.CoreComponets
         {
             CurrentVelocity = Rb.velocity;
         }
+
         #endregion
 
         #region VELOCITY METHODS
-        public void ApplyPositionOffset(Vector2 direction)
+
+        public void ApplyGravity(float fallAcceleration, float maxFallSpeed, float groundingForce, float jumpEndEarlyModifier,
+            bool isGrounded, bool endedJumpEarly)
         {
-            workspace += direction;
-            Rb.velocity = workspace;
-            CurrentVelocity = workspace;
+            if (isGrounded && CurrentVelocity.y <= 0f)
+            {
+                _workspace.Set(CurrentVelocity.x, groundingForce);
+            }
+            else
+            {
+                float appliedGravity = fallAcceleration;
+                if (endedJumpEarly && CurrentVelocity.y > 0f)
+                    appliedGravity *= jumpEndEarlyModifier;
+
+                _workspace.Set(CurrentVelocity.x, Mathf.MoveTowards(CurrentVelocity.y,
+                    -maxFallSpeed, appliedGravity * Time.fixedDeltaTime));
+            }
+            Rb.velocity = _workspace;
+            CurrentVelocity = _workspace;
+        }
+
+        public void ApplyPositionOffset(Vector2 offset)
+        {
+            Rb.position += offset;
+            CurrentVelocity = Rb.velocity;
         }
 
         public void SetVelocityZero()
@@ -46,34 +71,37 @@ namespace Tuleeeeee.CoreComponets
         public void SetVelocity(float velocity, Vector2 angle, int direction)
         {
             angle.Normalize();
-            workspace.Set(angle.x * velocity * direction, angle.y * velocity);
-            Rb.velocity = workspace;
-            CurrentVelocity = workspace;
+            _workspace.Set(angle.x * velocity * direction, angle.y * velocity);
+            Rb.velocity = _workspace;
+            CurrentVelocity = _workspace;
         }
 
         public void SetVelocity(float velocity, Vector2 direction)
         {
-            workspace = direction * velocity;
-            Rb.velocity = workspace;
-            CurrentVelocity = workspace;
+            _workspace = direction * velocity;
+            Rb.velocity = _workspace;
+            CurrentVelocity = _workspace;
         }
 
-        public void SetVelocityX(float velocity)
+        public void SetVelocityX(float velocity, float acceleration)
         {
-            workspace.Set(velocity, CurrentVelocity.y);
-            Rb.velocity = workspace;
-            CurrentVelocity = workspace;
+            // float newX = Mathf.MoveTowards(CurrentVelocity.x, velocity, acceleration * Time.fixedDeltaTime);
+            _workspace.Set(velocity, CurrentVelocity.y);
+            Rb.velocity = _workspace;
+            CurrentVelocity = _workspace;
         }
 
         public void SetVelocityY(float velocity)
         {
-            workspace.Set(CurrentVelocity.x, velocity);
-            Rb.velocity = workspace;
-            CurrentVelocity = workspace;
+            _workspace.Set(CurrentVelocity.x, velocity);
+            Rb.velocity = _workspace;
+            CurrentVelocity = _workspace;
         }
+
         #endregion
 
         #region GRAVITY & FREEZE
+
         public void SetGravityScale(float value)
         {
             Rb.gravityScale = value;
@@ -88,9 +116,11 @@ namespace Tuleeeeee.CoreComponets
         {
             Rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
+
         #endregion
 
         #region FLIP LOGIC
+
         public void CheckIfShouldFlip(int xInput)
         {
             if (xInput != 0 && xInput != FacingDirection)
@@ -106,6 +136,7 @@ namespace Tuleeeeee.CoreComponets
             localScale.x *= -1f;
             Rb.transform.localScale = localScale;
         }
+
         #endregion
     }
 }

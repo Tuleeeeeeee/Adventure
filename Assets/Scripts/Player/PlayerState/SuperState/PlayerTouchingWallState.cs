@@ -38,20 +38,20 @@ public class PlayerTouchingWallState : PlayerState
     {
         base.LogicUpdate();
 
-        XInput = player.InputHandler.NormInputX;
-        JumpInput = player.InputHandler.JumpInput;
+        XInput = Player.InputHandler.NormInputX;
+        JumpInput = Player.InputHandler.JumpInput;
         if (JumpInput)
         {
-            player.WallJumpState.DetermineWallJumpDirection(IsTouchingWall);
-            stateManager.ChangeState(player.WallJumpState);
+            Player.WallJumpState.DetermineWallJumpDirection(IsTouchingWall);
+            StateManager.ChangeState(Player.WallJumpState);
         }
         else if (IsGrounded)
         {
-            stateManager.ChangeState(player.IdleState);
+            StateManager.ChangeState(Player.IdleState);
         }
         else if (!IsTouchingWall || XInput != Movement.FacingDirection)
         {
-            stateManager.ChangeState(player.InAirState);
+            StateManager.ChangeState(Player.InAirState);
         }
     }
     

@@ -35,7 +35,7 @@ public class E_PlayerDetectedState : EnemiesState
 
         performLongRangeAction = false;
 
-        Movement.SetVelocityX(0f);
+      //  Movement.SetVelocityX(0f);
     }
 
     public override void LogicUpdate()

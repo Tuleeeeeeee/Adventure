@@ -14,7 +14,7 @@ public class PlayerAbilityState : PlayerState
     {
         base.DoCheck();
 
-        isGrounded =  player.CollisionSenses.Ground;
+        isGrounded =  Player.CollisionSenses.Ground;
     }
 
     public override void Enter()
@@ -29,13 +29,13 @@ public class PlayerAbilityState : PlayerState
         base.LogicUpdate();
         if (isAbilityDone) 
         {
-            if (isGrounded &&  player.Movement?.CurrentVelocity.y < 0.01f)
+            if (isGrounded &&  Player.Movement?.CurrentVelocity.y < 0.01f)
             {
-                stateManager.ChangeState(player.IdleState);
+                StateManager.ChangeState(Player.IdleState);
             }
             else
             {
-                stateManager.ChangeState(player.InAirState);
+                StateManager.ChangeState(Player.InAirState);
             }
         }
     }

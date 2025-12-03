@@ -8,9 +8,9 @@ public class PlayerWallSlideState : PlayerTouchingWallState
     {
         base.LogicUpdate();
 
-        if (!isExitingState)
+        if (!IsExitingState)
         {
-            Movement?.SetVelocityY(-playerData.wallSlideVelocity);
+            Movement?.SetVelocityY(-PlayerData.wallSlideVelocity);
        /*     player.CanCreateDuskWallJump();*/
         }
     }

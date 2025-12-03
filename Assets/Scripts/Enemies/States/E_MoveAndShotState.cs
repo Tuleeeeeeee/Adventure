@@ -46,7 +46,7 @@ public class E_MoveAndShotState : E_AttackState
         currentPosition = Entity.transform.position;
         Vector2 velocity = (stateData.targetPosition - currentPosition) / Time.deltaTime;
 
-        Movement?.SetVelocityX(velocity.x);
+        //Movement?.SetVelocityX(velocity.x);
         Movement?.SetVelocityY(velocity.y);
 
         if (stateData.angle >= Mathf.PI * 2)

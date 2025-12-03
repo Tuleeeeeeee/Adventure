@@ -1,19 +1,25 @@
-using Tuleeeeee.Cores;
 using Tuleeeeee.CoreComponets;
-using UnityEngine;
+using Tuleeeeee.Cores;
 using Tuleeeeee.Enums;
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     #region COMPONENTS
-    public CollisionSenses CollisionSenses => collisionSenses = collisionSenses != null ? collisionSenses : Core.GetCoreComponent(ref collisionSenses);
-    private CollisionSenses collisionSenses;
+    public CollisionSenses CollisionSenses =>
+        _collisionSenses =
+            _collisionSenses != null
+                ? _collisionSenses
+                : Core.GetCoreComponent(ref _collisionSenses);
+    private CollisionSenses _collisionSenses;
 
-    public Health Health => health = health != null ? health : Core.GetCoreComponent(ref health);
-    private Health health;
+    public Health Health =>
+        _health = _health != null ? _health : Core.GetCoreComponent(ref _health);
+    private Health _health;
 
-    public Movement Movement => movement = movement != null ? movement : Core.GetCoreComponent(ref movement);
-    private Movement movement;
+    public Movement Movement =>
+        _movement = _movement != null ? _movement : Core.GetCoreComponent(ref _movement);
+    private Movement _movement;
 
     public StateManager StateManager { get; private set; }
 
@@ -27,7 +33,8 @@ public class Player : MonoBehaviour
     public PlayerDisappearState DisappearState { get; private set; }
     #endregion
 
-    [SerializeField] private PlayerData playerData;
+    [SerializeField]
+    private PlayerData playerData;
 
     #region UNITY COMPONENTS
     public Core Core { get; private set; }
@@ -38,14 +45,11 @@ public class Player : MonoBehaviour
     #endregion
 
     public HealthEvent HealthEvent { get; private set; }
-    [SerializeField] private GameStateGameEventSO gameStateChangeEvent;
-    // Platform interaction
-    private Rigidbody2D currentPlatformRBody;
-    private Vector2 lastPlatformPosition;
-    private bool isOnPlatform;
 
-    private bool controlsEnabled = true;
+    [SerializeField]
+    private GameStateGameEventSO gameStateChangeEvent;
 
+    private bool _controlsEnabled = true;
 
     #region UNITY METHODS
     void OnEnable()
@@ -59,8 +63,6 @@ public class Player : MonoBehaviour
         HealthEvent.OnHealthChanged -= HealthEvent_OnHealthChanged;
         gameStateChangeEvent.UnregisterListener(OnGameStateChanged);
     }
-
-
 
     private void Awake()
     {
@@ -83,24 +85,28 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!controlsEnabled) return;
+        if (!_controlsEnabled)
+            return;
         Core.LogicUpdate();
         StateManager.CurrentPlayerState.LogicUpdate();
+
+        float speed = Movement.CurrentVelocity.magnitude;
+        Debug.Log("Player speed: " + speed);
+    }
+
+    private void LateUpdate()
+    {
+        if (!_controlsEnabled) return;
+
+        CollisionSenses.OpTopPlatformMovement();
     }
 
     private void FixedUpdate()
     {
-        if (!controlsEnabled) return;
+        if (!_controlsEnabled) return;
         StateManager.CurrentPlayerState.PhysicUpdate();
 
-        CheckIfOnPlatform();
-
-        if (isOnPlatform && currentPlatformRBody != null)
-        {
-            Vector2 platformMovement = currentPlatformRBody.position - lastPlatformPosition;
-            Movement.ApplyPositionOffset(platformMovement);
-            lastPlatformPosition = currentPlatformRBody.position;
-        }
+        CollisionSenses.Platform(BoxCollider2D);
     }
     #endregion
 
@@ -109,7 +115,7 @@ public class Player : MonoBehaviour
     private void SetControlsEnabled(bool enabled)
     {
         InputHandler.enabled = enabled;
-        controlsEnabled = enabled;
+        _controlsEnabled = enabled;
         Movement.enabled = enabled;
         Animator.enabled = enabled;
     }
@@ -131,11 +137,13 @@ public class Player : MonoBehaviour
         TrailRenderer.Clear();
     }
 
-
     #endregion
 
     #region EVENTS
-    private void HealthEvent_OnHealthChanged(HealthEvent healthEvent, HealthEventArgs healthEventArgs)
+    private void HealthEvent_OnHealthChanged(
+        HealthEvent healthEvent,
+        HealthEventArgs healthEventArgs
+    )
     {
         if (healthEventArgs.healthAmount <= 0f)
         {
@@ -156,7 +164,6 @@ public class Player : MonoBehaviour
             case GameState.GameWon:
                 DisableControls();
                 break;
-
         }
     }
     #endregion
@@ -168,40 +175,11 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    #region PLATFORM CHECK
-    private void CheckIfOnPlatform()
-    {
-        RaycastHit2D hit = Physics2D.BoxCast(
-            BoxCollider2D.bounds.center,
-            BoxCollider2D.bounds.size,
-            0f,
-            Vector2.down,
-            playerData.platformCheckDistance,
-            playerData.whatIsPlatfrom
-        );
-
-        if (hit.collider?.attachedRigidbody != null)
-        {
-            currentPlatformRBody = hit.collider.attachedRigidbody;
-
-            if (!isOnPlatform)
-            {
-                lastPlatformPosition = currentPlatformRBody.position;
-            }
-
-            isOnPlatform = true;
-        }
-        else
-        {
-            isOnPlatform = false;
-            currentPlatformRBody = null;
-        }
-    }
-    #endregion
-
     #region ANIM EVENT TRIGGERS
     private void AnimationTrigger() => StateManager.CurrentPlayerState.AnimationTrigger();
-    private void AnimationFinishedTrigger() => StateManager.CurrentPlayerState.AnimationFinishedTrigger();
+
+    private void AnimationFinishedTrigger() =>
+        StateManager.CurrentPlayerState.AnimationFinishedTrigger();
     #endregion
 
     #region STATE INITIALIZATION

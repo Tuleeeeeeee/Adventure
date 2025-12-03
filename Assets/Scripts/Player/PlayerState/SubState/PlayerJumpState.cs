@@ -12,11 +12,11 @@ public class PlayerJumpState : PlayerAbilityState
     public override void Enter()
     {
         base.Enter();
-        player.InputHandler.UsedJumpInput();
-        player.Movement?.SetVelocityY(playerData.jumpHeight);
+        Player.InputHandler.UsedJumpInput();
+        Player.Movement?.SetVelocityY(PlayerData.jumpHeight);
         isAbilityDone = true;
         amountOfJumpsLeft--;
-        player.InAirState.SetIsJumping();
+        Player.InAirState.SetIsJumping();
     }
     public bool CanJump()
     {
@@ -30,6 +30,6 @@ public class PlayerJumpState : PlayerAbilityState
         }
     }
 
-    public void ResetAmountOfJumpsLeft() => amountOfJumpsLeft = playerData.amountOfJumps;
+    public void ResetAmountOfJumpsLeft() => amountOfJumpsLeft = PlayerData.amountOfJumps;
     public void DecreaseAmountOfJumpsLeft() => amountOfJumpsLeft--;
 }

@@ -14,7 +14,7 @@ public class E_JumpState : E_AbilityState
         base.Enter();
         Movement?.SetVelocityY(stateData.jumpVelocity);
 
-        Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
+        //Movement?.SetVelocityX(stateData.movementSpeed * Movement.FacingDirection);
 
         isAbilityDone = true;
         amountOfJumpsLeft--;

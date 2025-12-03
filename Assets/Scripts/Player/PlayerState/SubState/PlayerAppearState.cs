@@ -6,6 +6,6 @@ public class PlayerAppearState : PlayerState
     public override void AnimationFinishedTrigger()
     {
         base.AnimationFinishedTrigger();
-        player.StateManager.ChangeState(player.IdleState);
+        Player.StateManager.ChangeState(Player.IdleState);
     }
 }

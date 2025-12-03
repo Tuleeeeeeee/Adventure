@@ -4,40 +4,42 @@ using UnityEngine;
 public class PlayerState
 {
     protected Core Core;
-    protected Player player;
-    protected StateManager stateManager;
-    protected PlayerData playerData;
-    protected bool isAnimationFinished;
-    protected bool isExitingState;
-    protected float startTime;
-    private string animBoolName;
+    protected Player Player;
+    protected StateManager StateManager;
+    protected PlayerData PlayerData;
+    protected bool IsAnimationFinished;
+    protected bool IsExitingState;
+    protected float StartTime;
+    private string _animBoolName;
 
     public PlayerState(Player player, StateManager stateManager, PlayerData playerData, string animBoolName)
     {
-        this.player = player;
-        this.stateManager = stateManager;
-        this.playerData = playerData;
-        this.animBoolName = animBoolName;
+        this.Player = player;
+        this.StateManager = stateManager;
+        this.PlayerData = playerData;
+        this._animBoolName = animBoolName;
         Core = player.Core;
     }
+    // ReSharper disable Unity.PerformanceAnalysis
     public virtual void Enter()
     {
         DoCheck();
-        startTime = Time.time;
-        player.Animator.SetBool(animBoolName, true);
-        Debug.Log($"State: {animBoolName}");
-        isAnimationFinished = false;
-        isExitingState = false;
+        StartTime = Time.time;
+        Player.Animator.SetBool(_animBoolName, true);
+        Debug.Log($"State: {_animBoolName}");
+        IsAnimationFinished = false;
+        IsExitingState = false;
     }
     public virtual void Exit()
     {
-        player.Animator.SetBool(animBoolName, false);
-        isExitingState = true;
+        Player.Animator.SetBool(_animBoolName, false);
+        IsExitingState = true;
     }
     public virtual void LogicUpdate()
     {
 
     }
+    // ReSharper disable Unity.PerformanceAnalysis
     public virtual void PhysicUpdate()
     {
         DoCheck();
@@ -51,7 +53,7 @@ public class PlayerState
 
     }
 
-    public virtual void AnimationFinishedTrigger() => isAnimationFinished = true;
+    public virtual void AnimationFinishedTrigger() => IsAnimationFinished = true;
 
 }
 

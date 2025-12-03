@@ -6,14 +6,14 @@ public class PlayerIdleState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        player.Movement?.SetVelocityZero();
+        Player.Movement?.SetVelocityZero();
     }
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (XInput != 0 && !isExitingState)
+        if (XInput != 0 && !IsExitingState)
         {
-            stateManager.ChangeState(player.MoveState);
+            StateManager.ChangeState(Player.MoveState);
         }
     }
 }

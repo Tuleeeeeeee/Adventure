@@ -40,7 +40,7 @@ public class E_FlyState : EnemiesState
         // Calculate the velocity needed to reach the target position
         Vector2 velocity = (stateData.targetPosition - currentPosition) / Time.deltaTime;
 
-        Movement?.SetVelocityX(velocity.x);
+      //  Movement?.SetVelocityX(velocity.x);
         Movement?.SetVelocityY(velocity.y);
 
         if (Movement?.CurrentVelocity.x > 0 && Movement.FacingDirection == -1)
